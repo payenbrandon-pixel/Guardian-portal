@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardian Genetics Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;min-height:100vh}
+body{font-family:'Outfit',sans-serif;background:#f7f9fc;color:#2d3748;line-height:1.5;-webkit-font-smoothing:antialiased}
+:root{--p:#0052cc;--pd:#003d99;--pl:#e8f0fe;--pm:#4d8ff5;--t:#00897b;--tl:#e0f2f1;--navy:#0a1f44;--g50:#f7f9fc;--g100:#eef1f6;--g200:#dde3ee;--g300:#c4cdd9;--g400:#8f9fae;--g500:#6b7a8d;--g600:#4a5568;--g700:#2d3748;--ok:#00a651;--okl:#e6f7ee;--warn:#f59e0b;--warnl:#fffbeb;--err:#e53e3e;--errl:#fff5f5;--sw:260px;--th:64px;--r:10px;--rs:6px;--rl:16px;--t2:all .2s ease}
+button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;outline:none}
+input,select,textarea{font-family:'Outfit',sans-serif;outline:none}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--g300);border-radius:3px}
+/* AUTH */
+.auth-wrap{min-height:100vh;width:100%;display:grid;grid-template-columns:480px 1fr}
+.auth-form-side{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 40px;background:white}
+.auth-form-inner{width:100%;max-width:360px}
+.auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:40px}
+.auth-brand-mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-size:20px}
+.auth-brand-name{font-size:18px;font-weight:700;color:var(--navy)}
+.auth-brand-name span{color:var(--p)}
+.auth-heading{font-family:'Lora',serif;font-size:26px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.auth-subheading{font-size:14px;color:var(--g500);margin-bottom:28px}
+.ff{margin-bottom:16px}
+.fl{display:block;font-size:13px;font-weight:500;color:var(--g600);margin-bottom:5px}
+.fc{width:100%;padding:10px 13px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:14px;color:var(--g800,#1a202c);background:white;transition:var(--t2)}
+.fc:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,82,204,.1)}
+.fc::placeholder{color:var(--g300)}
+.role-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.role-tab{padding:10px 8px;border-radius:var(--rs);border:1.5px solid var(--g200);text-align:center;cursor:pointer;transition:var(--t2);font-size:13px;font-weight:500;color:var(--g500)}
+.role-tab:hover,.role-tab.active{border-color:var(--p);color:var(--p)}
+.role-tab.active{background:var(--pl)}
+.role-tab-icon{font-size:20px;display:block;margin-bottom:4px}
+.btn-auth{width:100%;padding:12px;background:var(--p);color:white;border-radius:var(--rs);font-size:15px;font-weight:600;transition:var(--t2);border:none;font-family:'Outfit',sans-serif;cursor:pointer}
+.btn-auth:hover{background:var(--pd);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,82,204,.3)}
+.auth-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--g500)}
+.auth-switch a{color:var(--p);font-weight:600;cursor:pointer}
+.auth-alert{padding:10px 13px;border-radius:var(--rs);font-size:13px;margin-bottom:14px;display:none}
+.auth-alert.error{background:var(--errl);color:var(--err);border:1px solid #fecaca}
+.auth-alert.success{background:var(--okl);color:var(--ok);border:1px solid #a7f3d0}
+.auth-panel{background:linear-gradient(150deg,var(--navy) 0%,#0a3366 50%,#0d5c6e 100%);display:flex;flex-direction:column;justify-content:center;padding:60px}
+.auth-panel-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:32px;width:fit-content}
+.auth-panel-title{font-family:'Lora',serif;font-size:38px;font-weight:600;color:white;line-height:1.2;margin-bottom:16px}
+.auth-panel-title em{font-style:italic;color:#7dd3fc}
+.auth-panel-desc{font-size:15px;color:rgba(255,255,255,.55);line-height:1.7;max-width:400px;margin-bottom:40px}
+.auth-features{display:flex;flex-direction:column;gap:14px}
+.auth-feature{display:flex;align-items:center;gap:12px}
+.auth-feature-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.auth-feature-text{font-size:14px;color:rgba(255,255,255,.7)}
+.auth-stats-row{display:flex;gap:32px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,.1)}
+.auth-stat-num{font-family:'Lora',serif;font-size:28px;color:white}
+.auth-stat-lbl{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+/* APP LAYOUT - FULL PAGE FIX */
+#root{width:100%;min-height:100vh;display:block}
+.app-layout{display:flex;width:100%;min-height:100vh;position:relative}
+.sidebar{width:var(--sw);min-height:100vh;background:var(--navy);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;flex-shrink:0}
+.sidebar-header{height:var(--th);display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sidebar-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sidebar-logo-text{font-size:15px;font-weight:700;color:white}
+.sidebar-logo-text span{color:#7dd3fc}
+.sidebar-body{flex:1;overflow-y:auto;padding:12px}
+.nav-section-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:8px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);font-size:13.5px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:var(--t2);position:relative;margin-bottom:1px}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(0,82,204,.35);color:white}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--pm);border-radius:0 2px 2px 0}
+.nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--err);color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.07);padding:14px 16px}
+.user-card{display:flex;align-items:center;gap:10px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:rgba(255,255,255,.35)}
+.user-logout{color:rgba(255,255,255,.3);font-size:18px;cursor:pointer;transition:var(--t2);padding:4px}
+.user-logout:hover{color:var(--err)}
+/* MAIN CONTENT - FULL WIDTH FIX */
+.main-content{margin-left:var(--sw);width:calc(100% - var(--sw));min-height:100vh;display:flex;flex-direction:column;background:var(--g50)}
+.topbar{height:var(--th);background:white;border-bottom:1px solid var(--g100);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 1px 2px rgba(0,0,0,.05);flex-shrink:0}
+.topbar-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--navy);flex:1}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--rs);background:var(--g50);border:1px solid var(--g100);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:var(--t2);position:relative}
+.tb-btn:hover{background:var(--pl);border-color:var(--p)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--err);border:1.5px solid white}
+.tb-div{width:1px;height:28px;background:var(--g200)}
+.tb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;cursor:pointer}
+.page-content{flex:1;padding:28px;width:100%;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;transition:var(--t2);cursor:pointer;border:none;white-space:nowrap}
+.btn-p{background:var(--p);color:white}.btn-p:hover{background:var(--pd);box-shadow:0 4px 10px rgba(0,82,204,.25)}
+.btn-sec{background:var(--g100);color:var(--g700)}.btn-sec:hover{background:var(--g200)}
+.btn-out{background:white;color:var(--p);border:1.5px solid var(--p)}.btn-out:hover{background:var(--pl)}
+.btn-gh{background:transparent;color:var(--g600)}.btn-gh:hover{background:var(--g100)}
+.btn-ok{background:var(--ok);color:white}.btn-ok:hover{background:#008f47}
+.btn-err{background:var(--err);color:white}.btn-err:hover{background:#c53030}
+.btn-teal{background:var(--t);color:white}.btn-teal:hover{background:#00796b}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:11px 22px;font-size:15px}
+/* CARDS */
+.card{background:white;border-radius:var(--r);border:1px solid var(--g100);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+.ct{font-size:14px;font-weight:700;color:var(--navy)}
+.cs{font-size:12px;color:var(--g400);margin-top:1px}
+.cb{padding:16px 20px 20px}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.sc{background:white;border-radius:var(--r);border:1px solid var(--g100);padding:18px 20px;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:var(--t2)}
+.sc:hover{box-shadow:0 2px 8px rgba(0,0,0,.06);transform:translateY(-2px)}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.si{width:40px;height:40px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:18px}
+.si.blue{background:var(--pl)}.si.teal{background:var(--tl)}.si.green{background:var(--okl)}.si.yellow{background:var(--warnl)}
+.st{font-size:11px;font-weight:600;padding:3px 7px;border-radius:20px}
+.st.up{background:var(--okl);color:var(--ok)}.st.n{background:var(--g100);color:var(--g500)}
+.sv{font-family:'Lora',serif;font-size:26px;font-weight:600;color:var(--navy);line-height:1}
+.sl{font-size:12px;color:var(--g500);margin-top:4px}
+/* TABLE */
+.tw{overflow-x:auto}
+.dt{width:100%;border-collapse:collapse;font-size:13px}
+.dt thead th{text-align:left;padding:10px 16px;font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;background:var(--g50);border-bottom:1px solid var(--g100);white-space:nowrap}
+.dt tbody td{padding:12px 16px;border-bottom:1px solid var(--g50);color:var(--g700);vertical-align:middle}
+.dt tbody tr:last-child td{border-bottom:none}
+.dt tbody tr{transition:var(--t2);cursor:pointer}
+.dt tbody tr:hover td{background:var(--g50)}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.b-blue{background:#dbeafe;color:#1d4ed8}.b-green{background:var(--okl);color:#065f46}.b-yellow{background:var(--warnl);color:#92400e}.b-red{background:var(--errl);color:#991b1b}.b-gray{background:var(--g100);color:var(--g600)}.b-teal{background:var(--tl);color:#00695c}.b-purple{background:#f3e8ff;color:#6b21a8}
+/* EMPTY */
+.es{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:var(--g400)}
+.es-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.es-title{font-size:14px;font-weight:600;color:var(--g500);margin-bottom:4px}
+.es-desc{font-size:12px;text-align:center;max-width:220px}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,31,68,.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:white;border-radius:var(--rl);width:100%;max-width:560px;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:slideUp .2s ease;max-height:92vh;display:flex;flex-direction:column}
+.modal-lg{max-width:780px}.modal-xl{max-width:960px}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mh{padding:20px 24px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.mt{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--navy)}
+.mc{width:28px;height:28px;border-radius:50%;background:var(--g100);border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t2);color:var(--g500)}
+.mc:hover{background:var(--g200)}
+.mb{padding:20px 24px;overflow-y:auto;flex:1}
+.mf{padding:16px 24px;border-top:1px solid var(--g100);display:flex;gap:10px;justify-content:flex-end;flex-shrink:0}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.ph-title{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--navy)}
+.ph-desc{font-size:13px;color:var(--g500);margin-top:3px}
+.ph-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+/* TOAST */
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:toastIn .25s ease;min-width:260px;background:white}
+@keyframes toastIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.success{color:var(--ok);border-left:4px solid var(--ok)}.toast.error{color:var(--err);border-left:4px solid var(--err)}.toast.info{color:var(--p);border-left:4px solid var(--p)}
+.toast-msg{flex:1;color:var(--g700)}
+/* WELCOME BANNER */
+.wb{background:linear-gradient(135deg,var(--navy) 0%,#0a3366 60%,#0d5c6e 100%);border-radius:var(--rl);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;position:relative;overflow:hidden}
+.wb::after{content:'🧬';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.08}
+.wb-title{font-family:'Lora',serif;font-size:20px;color:white;margin-bottom:4px}
+.wb-sub{font-size:13px;color:rgba(255,255,255,.55)}
+.wb-next{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--r);padding:12px 16px;text-align:right}
+.wb-nl{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:2px}
+.wb-nv{font-size:14px;font-weight:600;color:white}
+/* TIMELINE */
+.tl{display:flex;flex-direction:column}
+.tli{display:flex;gap:14px;padding:12px 0;cursor:pointer;transition:var(--t2)}
+.tli+.tli{border-top:1px solid var(--g50)}
+.tli:hover{background:var(--g50);margin:0 -8px;padding:12px 8px;border-radius:var(--rs)}
+.tld{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+.tld.blue{background:var(--pl)}.tld.green{background:var(--okl)}.tld.yellow{background:var(--warnl)}.tld.gray{background:var(--g100)}
+.tlt{font-size:13px;font-weight:600;color:var(--navy)}
+.tlm{font-size:12px;color:var(--g400);margin-top:2px}
+/* PROVIDER CARD */
+.prov-card{background:white;border-radius:var(--r);border:1px solid var(--g100);padding:20px;transition:var(--t2);cursor:pointer}
+.prov-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06);border-color:var(--p);transform:translateY(-2px)}
+.prov-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:22px;color:white;margin:0 auto 14px;border:3px solid var(--pl)}
+.prov-name{font-size:15px;font-weight:700;color:var(--navy);text-align:center}
+.prov-spec{font-size:12px;color:var(--p);text-align:center;margin-top:2px;margin-bottom:10px;font-weight:500}
+.prov-bio{font-size:12px;color:var(--g600);line-height:1.6;margin-bottom:12px;text-align:center}
+.prov-creds{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
+/* SEARCH */
+.srow{display:flex;gap:8px;align-items:center}
+.sbar{display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--g200);border-radius:var(--rs);padding:8px 14px;transition:var(--t2);flex:1}
+.sbar:focus-within{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,82,204,.1)}
+.sbar input{border:none;outline:none;font-size:14px;color:#1a202c;width:100%;background:transparent}
+.sbar input::placeholder{color:var(--g300)}
+.sbtn{padding:9px 16px;background:var(--p);color:white;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:var(--t2);white-space:nowrap}
+.sbtn:hover{background:var(--pd)}
+.frow{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.flabel{font-size:12px;font-weight:600;color:var(--g500)}
+.fchip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--g200);color:var(--g600);background:white;transition:var(--t2)}
+.fchip:hover{border-color:var(--p);color:var(--p)}
+.fchip.active{background:var(--p);color:white;border-color:var(--p)}
+.fsel{padding:6px 12px;border:1.5px solid var(--g200);border-radius:var(--rs);font-size:12px;font-weight:600;color:var(--g600);background:white;cursor:pointer;font-family:'Outfit',sans-serif;transition:var(--t2)}
+.fsel:focus{border-color:var(--p)}
+/* MESSAGE */
+.msg-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--g50);cursor:pointer;transition:var(--t2)}
+.msg-item:last-child{border-bottom:none}
+.msg-item:hover{background:var(--g50)}
+.msg-item.unread{background:#f0f7ff}
+.msg-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--p)}
+.msg-subj{font-size:13px;font-weight:600;color:var(--navy)}
+.msg-subj.u{color:var(--p)}
+.msg-prev{font-size:12px;color:var(--g500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px}
+.udot{width:8px;height:8px;border-radius:50%;background:var(--p);flex-shrink:0;margin-top:4px}
+/* PROFILE */
+.prof-hero{background:linear-gradient(135deg,var(--navy),#0a3366);border-radius:var(--rl);padding:28px;display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.prof-av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--t));display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:26px;color:white;flex-shrink:0;border:3px solid rgba(255,255,255,.2)}
+.prof-name{font-family:'Lora',serif;font-size:22px;color:white}
+.prof-meta{font-size:13px;color:rgba(255,255,255,.55);margin-top:4px}
+.prof-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--g200);margin-bottom:20px;overflow-x:auto}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--g500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--t2);white-space:nowrap}
+.tab:hover{color:var(--p)}
+.tab.active{color:var(--p);border-bottom-color:var(--p)}
+/* CALENDAR */
+.cal{background:white;border-radius:var(--r);border:1px solid var(--g100)}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--g100)}
+.cal-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--navy)}
+.cal-nbtn{width:28px;height:28px;border-radius:var(--rs);background:var(--g100);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:var(--t2)}
+.cal-nbtn:hover{background:var(--pl);color:var(--p)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dl{text-align:center;padding:8px 4px;font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--rs);margin:2px;font-size:13px;font-weight:500;color:var(--g700);transition:var(--t2);position:relative}
+.cal-day:hover{background:var(--pl);color:var(--p)}
+.cal-day.today{background:var(--p);color:white;font-weight:700}
+.cal-day.has-appt::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--t);position:absolute;bottom:3px}
+.cal-day.today.has-appt::after{background:white}
+.cal-day.other-month{color:var(--g300)}
+/* BILLING */
+.bb{background:var(--g50);border-radius:var(--r);padding:16px 20px}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;color:var(--g700)}
+.brow+.brow{border-top:1px solid var(--g200)}
+.brow.total{font-weight:700;font-size:15px;color:var(--navy)}
+.brow.paid{color:var(--ok)}
+/* INSURANCE CARD */
+.ins-card{background:linear-gradient(135deg,#1a3a6e,var(--t));border-radius:var(--rl);padding:22px 24px;color:white;position:relative;overflow:hidden}
+.ins-card::after{content:'🛡';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:52px;opacity:.1}
+.ins-lbl{font-size:11px;opacity:.6;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.ins-val{font-size:15px;font-weight:600}
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+/* CONTACT */
+.contact-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--rs);cursor:pointer;transition:var(--t2)}
+.contact-item:hover{background:var(--g50)}
+.contact-av{width:34px;height:34px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
+/* FILE DROP */
+.fdrop{border:2px dashed var(--g200);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer;transition:var(--t2)}
+.fdrop:hover{border-color:var(--p);background:var(--pl)}
+.fdrop-icon{font-size:26px;margin-bottom:8px}
+.fdrop-text{font-size:13px;color:var(--g500);font-weight:500}
+.fdrop-sub{font-size:11px;color:var(--g400);margin-top:3px}
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px}
+.divider-label{font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.divider-line{flex:1;height:1px;background:var(--g100)}
+/* VITALS */
+.vc{background:white;border:1px solid var(--g100);border-radius:var(--r);padding:14px 16px;text-align:center}
+.vc-icon{font-size:22px;margin-bottom:6px}
+.vc-val{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--navy)}
+.vc-lbl{font-size:11px;color:var(--g500);margin-top:2px}
+.vc-st{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:5px;display:inline-block}
+.vc-st.ok{background:var(--okl);color:var(--ok)}.vc-st.warn{background:var(--warnl);color:#92400e}
+/* INFO ROW */
+.ir{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--g50);font-size:13px}
+.ir:last-child{border-bottom:none}
+.ir-lbl{width:140px;color:var(--g500);flex-shrink:0;font-weight:500}
+.ir-val{color:#1a202c;font-weight:500}
+/* ACTION GRID */
+.ag{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.ab{background:white;border:1.5px solid var(--g200);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;transition:var(--t2)}
+.ab:hover{border-color:var(--p);background:var(--pl)}
+.ab-icon{font-size:22px;margin-bottom:6px}
+.ab-lbl{font-size:12px;font-weight:600;color:var(--navy)}
+.ab-desc{font-size:11px;color:var(--g500);margin-top:2px}
+/* PAY METHOD */
+.pm-card{display:flex;align-items:center;gap:12px;padding:14px;background:white;border:1.5px solid var(--g200);border-radius:var(--r);transition:var(--t2);margin-bottom:10px}
+.pm-card:hover{border-color:var(--p)}
+.pm-card.default{border-color:var(--ok);background:var(--okl)}
+/* MSG THREAD */
+.mthread{background:var(--g50);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.mti{background:white;border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;border:1px solid var(--g100)}
+.mti:last-child{margin-bottom:0}
+.mti-sender{font-size:12px;font-weight:600;color:var(--p);margin-bottom:4px}
+.mti-body{font-size:13px;color:var(--g700);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toast-wrap" class="toast-wrap"></div>
+<div id="modal-root"></div>
+<script>
+const API='https://guardianapi-ftanbefefpf7hcg7.eastus2-01.azurewebsites.net/api';
+let S={screen:'login',authMode:'login',selectedRole:'Admin',user:null,page:'dashboard',
+  data:{patients:[],providers:[],appointments:[],testResults:[],messages:[],billing:[]},
+  modal:null,md:null,unread:0,calY:new Date().getFullYear(),calM:new Date().getMonth(),
+  q:'',qi:'',fStatus:'all',fType:'all',tab:0,
+  payMethods:[{id:1,type:'Visa',last4:'4242',exp:'12/26',isDefault:true},{id:2,type:'Mastercard',last4:'8821',exp:'08/27',isDefault:false}]};
+
+const INSURANCES=[
+  {val:0,label:'No Insurance — 0% covered'},
+  {val:80,label:'BlueCross BlueShield PPO — 80%'},
+  {val:70,label:'Aetna HMO — 70%'},
+  {val:75,label:'UnitedHealth Choice Plus — 75%'},
+  {val:72,label:'Cigna Open Access — 72%'},
+  {val:65,label:'Humana Gold Plus — 65%'},
+  {val:100,label:'Medicare Part B — 100%'},
+  {val:90,label:'Medicaid — 90%'},
+  {val:60,label:'Kaiser Permanente — 60%'},
+  {val:78,label:'Anthem Blue Cross — 78%'},
+  {val:85,label:'Tricare — 85%'},
+  {val:68,label:'Molina Healthcare — 68%'},
+  {val:73,label:'WellCare — 73%'},
+  {val:82,label:'GEHA — 82%'}
+];
+
+async function api(m,p,b){try{const r=await fetch(`${API}${p}`,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});const t=await r.text();let d;try{d=JSON.parse(t)}catch{d=t}return{ok:r.ok,data:d}}catch(e){return{ok:false,error:e.message}}}
+function arr(x){return Array.isArray(x)?x:(x?[x]:[])}
+function fd(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function fdt(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function age(dob){if(!dob)return'—';const d=new Date(dob);const now=new Date();let a=now.getFullYear()-d.getFullYear();if(now.getMonth()<d.getMonth()||(now.getMonth()===d.getMonth()&&now.getDate()<d.getDate()))a--;return a}
+function ini(a,b){return((a||'')[0]||'').toUpperCase()+((b||'')[0]||'').toUpperCase()}
+function $(id){return document.getElementById(id)}
+function toast(msg,type='info'){const w=$('toast-wrap');const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span style="font-size:16px">${{success:'✓',error:'✕',info:'ℹ'}[type]||'ℹ'}</span><span class="toast-msg">${msg}</span>`;w.appendChild(el);setTimeout(()=>el.remove(),3500)}
+function b(t,c){return`<span class="badge b-${c}">${t}</span>`}
+function sb(s){const m={Scheduled:'blue',Completed:'green',Cancelled:'red',Pending:'yellow',Paid:'green',Unpaid:'yellow',Low:'green',Medium:'yellow',High:'red',Active:'green',Inactive:'gray'};return b(s,m[s]||'gray')}
+function es(icon,title,desc){return`<div class="es"><div class="es-icon">${icon}</div><div class="es-title">${title}</div><div class="es-desc">${desc||''}</div></div>`}
+function esc(s){return String(s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;')}
+function je(o){try{return esc(JSON.stringify(o))}catch{return'{}'}}
+function doSearch(){S.q=S.qi;render()}
+function clearSearch(){S.q='';S.qi='';render()}
+function sbar(ph,w){return`<div class="srow" style="width:${w||'320px'}"><div class="sbar"><span style="color:var(--g400)">🔍</span><input placeholder="${ph}" value="${S.qi}" oninput="S.qi=this.value" onkeydown="if(event.key==='Enter')doSearch()"></div><button class="sbtn" onclick="doSearch()">Search</button>${S.q?`<button class="btn btn-gh btn-sm" onclick="clearSearch()">✕ Clear</button>`:''}</div>`}
+
+async function loadData(){
+  const uid=S.user?.userId||1;
+  const[pats,provs,appts,msgs,bills,results]=await Promise.all([
+    api('GET','/patients'),api('GET','/providers'),
+    api('GET','/appointments/patient/1'),api('GET',`/messages/inbox/${uid}`),
+    api('GET','/billing/patient/1'),api('GET','/testresults/patient/1')
+  ]);
+  if(pats.ok)S.data.patients=arr(pats.data);
+  if(provs.ok)S.data.providers=arr(provs.data);
+  if(appts.ok)S.data.appointments=arr(appts.data);
+  if(msgs.ok){S.data.messages=arr(msgs.data);S.unread=S.data.messages.filter(m=>!m.isRead).length}
+  if(bills.ok)S.data.billing=arr(bills.data);
+  if(results.ok)S.data.testResults=arr(results.data);
+  render();
+}
+
+async function doLogin(e){e.preventDefault();const email=$('l-email').value,pass=$('l-pass').value,err=$('l-err');err.style.display='none';const r=await api('POST','/login',{email,password:pass});if(r.ok&&r.data.userId){S.user=r.data;S.screen='app';S.page='dashboard';render();loadData()}else{err.textContent=r.data?.message||'Invalid email or password.';err.style.display='block'}}
+async function doRegister(e){e.preventDefault();const email=$('r-email').value,pass=$('r-pass').value,role=S.selectedRole;const err=$('r-err'),ok=$('r-ok');err.style.display='none';ok.style.display='none';const r=await api('POST','/register',{email,password:pass,role});if(r.ok){ok.textContent='Account created! Redirecting...';ok.style.display='block';setTimeout(()=>{S.authMode='login';render()},1600)}else{err.textContent=r.data?.message||'Registration failed.';err.style.display='block'}}
+function logout(){S.user=null;S.screen='login';S.data={patients:[],providers:[],appointments:[],testResults:[],messages:[],billing:[]};S.unread=0;render()}
+function role(){return(S.selectedRole||'Admin').toLowerCase()}
+function isAdmin(){return role()==='admin'}
+function isProvider(){return role()==='provider'}
+function isPatient(){return role()==='patient'}
+
+function getNav(){
+  if(isPatient())return[{id:'dashboard',icon:'⊞',label:'My Dashboard'},{id:'my-providers',icon:'🩺',label:'My Providers'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'},{id:'billing',icon:'💰',label:'Billing & Insurance'}];
+  if(isProvider())return[{id:'dashboard',icon:'⊞',label:'Dashboard'},{id:'patients',icon:'👥',label:'Patient Directory'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'}];
+  return[{id:'dashboard',icon:'⊞',label:'Dashboard'},{id:'patients',icon:'👥',label:'Patient Directory'},{id:'providers',icon:'🩺',label:'Providers'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'},{id:'billing',icon:'💰',label:'Billing'}];
+}
+const TITLES={dashboard:'Dashboard','my-providers':'My Providers',patients:'Patient Directory',providers:'Providers',appointments:'Appointments',testresults:'Test Results',messages:'Messages',billing:'Billing & Insurance'};
+
+function cal(appts){
+  const now=new Date(),y=S.calY,mo=S.calM;
+  const first=new Date(y,mo,1).getDay(),days=new Date(y,mo+1,0).getDate();
+  const mName=new Date(y,mo).toLocaleString('default',{month:'long'});
+  const adays=new Set(appts.map(a=>{const d=new Date(a.appointmentDate);return d.getFullYear()===y&&d.getMonth()===mo?d.getDate():null}).filter(Boolean));
+  let cells='';
+  for(let i=0;i<first;i++)cells+=`<div class="cal-day other-month"></div>`;
+  for(let d=1;d<=days;d++){const iT=d===now.getDate()&&mo===now.getMonth()&&y===now.getFullYear();const hA=adays.has(d);cells+=`<div class="cal-day ${iT?'today':''} ${hA?'has-appt':''}" onclick="calClick(${d})">${d}</div>`}
+  return`<div class="cal"><div class="cal-hdr"><div class="cal-title">${mName} ${y}</div><div style="display:flex;gap:8px"><button class="cal-nbtn" onclick="event.stopPropagation();S.calM--;if(S.calM<0){S.calM=11;S.calY--}render()">‹</button><button class="cal-nbtn" onclick="event.stopPropagation();S.calM++;if(S.calM>11){S.calM=0;S.calY++}render()">›</button></div></div><div style="padding:10px"><div class="cal-grid">${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-dl">${d}</div>`).join('')}${cells}</div></div><div style="padding:0 12px 12px;display:flex;gap:8px"><button class="btn btn-p btn-sm" onclick="openModal('addAppt')">+ Schedule</button></div></div>`;
+}
+function calClick(d){const a=S.data.appointments.filter(x=>{const dt=new Date(x.appointmentDate);return dt.getDate()===d&&dt.getMonth()===S.calM&&dt.getFullYear()===S.calY});if(a.length>0)openModal('calDay',{day:d,appts:a});else openModal('addAppt')}
+
+/* ── PAGES ── */
+function pageDashboard(){return isPatient()?patientDash():isProvider()?providerDash():adminDash()}
+
+function adminDash(){
+  const{patients,providers,appointments,testResults,messages,billing}=S.data;
+  const nextA=appointments.find(a=>a.status==='Scheduled');
+  const owed=billing.reduce((s,b)=>s+(b.patientOwes||0),0);
+  return`<div class="wb"><div><div class="wb-title">Welcome back, ${S.user?.email?.split('@')[0]||'Admin'} 👋</div><div class="wb-sub">Guardian Genetics Admin — full system overview</div></div>${nextA?`<div class="wb-next"><div class="wb-nl">Next Appointment</div><div class="wb-nv">${fd(nextA.appointmentDate)}</div></div>`:''}</div>
+  <div class="stats-row"><div class="sc"><div class="sc-top"><div class="si blue">👥</div><span class="st n">Total</span></div><div class="sv">${patients.length}</div><div class="sl">Patients</div></div><div class="sc"><div class="sc-top"><div class="si teal">🩺</div><span class="st n">Active</span></div><div class="sv">${providers.length}</div><div class="sl">Providers</div></div><div class="sc"><div class="sc-top"><div class="si green">🧬</div><span class="st n">Done</span></div><div class="sv">${testResults.length}</div><div class="sl">Test Results</div></div><div class="sc"><div class="sc-top"><div class="si yellow">💰</div><span class="st ${owed>0?'up':'n'}">${owed>0?'Due':'Clear'}</span></div><div class="sv">$${owed.toFixed(0)}</div><div class="sl">Balance Due</div></div></div>
+  <div class="g2" style="gap:20px"><div class="card"><div class="ch"><div><div class="ct">Recent Appointments</div><div class="cs">${appointments.length} total</div></div><button class="btn btn-p btn-sm" onclick="setPage('appointments')">View All</button></div><div class="cb" style="padding-top:12px">${appointments.length===0?es('📅','No appointments'):appointments.slice(0,4).map(a=>`<div class="tli" onclick="openModal('apptDetail',${je(a)})"><div class="tld ${a.status==='Completed'?'green':'blue'}">${a.status==='Completed'?'✓':'📅'}</div><div style="flex:1"><div class="tlt">${a.appointmentType||'Visit'}</div><div class="tlm">${fd(a.appointmentDate)}</div></div>${sb(a.status)}</div>`).join('')}</div></div>
+  <div class="card"><div class="ch"><div><div class="ct">Messages</div><div class="cs">${S.unread} unread</div></div><button class="btn btn-p btn-sm" onclick="setPage('messages')">View All</button></div><div class="cb" style="padding-top:8px">${messages.slice(0,3).map(m=>`<div class="msg-item ${!m.isRead?'unread':''}" onclick="openModal('viewMsg',${je(m)})"><div class="msg-av">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="msg-subj ${!m.isRead?'u':''}">${m.subject||'(No subject)'}</div><div class="msg-prev">${m.body||''}</div></div></div>`).join('')}</div></div></div>`;
+}
+
+function providerDash(){
+  const{patients,appointments,testResults,messages}=S.data;
+  const upcoming=appointments.filter(a=>a.status==='Scheduled');
+  return`<div class="wb"><div><div class="wb-title">Good morning, Dr. ${S.user?.email?.split('@')[0]||'Provider'} 👋</div><div class="wb-sub">You have ${upcoming.length} upcoming appointment${upcoming.length!==1?'s':''}</div></div><div style="display:flex;gap:10px"><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="openModal('addAppt')">+ Schedule</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="openModal('addTestResult',null)">+ Add Result</button></div></div>
+  <div class="stats-row"><div class="sc"><div class="sc-top"><div class="si blue">👥</div></div><div class="sv">${patients.length}</div><div class="sl">My Patients</div></div><div class="sc"><div class="sc-top"><div class="si yellow">📅</div></div><div class="sv">${upcoming.length}</div><div class="sl">Upcoming</div></div><div class="sc"><div class="sc-top"><div class="si green">🧬</div></div><div class="sv">${testResults.length}</div><div class="sl">Results Issued</div></div><div class="sc"><div class="sc-top"><div class="si teal">💬</div></div><div class="sv">${S.unread}</div><div class="sl">Unread Messages</div></div></div>
+  <div class="g2" style="gap:20px">${cal(appointments)}<div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="ch"><div class="ct">Upcoming Appointments</div></div><div class="cb" style="padding-top:12px">${upcoming.length===0?es('📅','No upcoming'):upcoming.slice(0,4).map(a=>`<div class="tli" onclick="openModal('apptDetail',${je(a)})"><div class="tld blue">📅</div><div style="flex:1"><div class="tlt">${a.appointmentType||'Visit'}</div><div class="tlm">${fdt(a.appointmentDate)}</div></div>${sb(a.status)}</div>`).join('')}</div></div><div class="card"><div class="ch"><div class="ct">Recent Messages</div><button class="btn btn-p btn-sm" onclick="setPage('messages')">View All</button></div><div class="cb" style="padding-top:8px">${messages.slice(0,3).map(m=>`<div class="msg-item ${!m.isRead?'unread':''}" onclick="openModal('viewMsg',${je(m)})"><div class="msg-av">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="msg-subj ${!m.isRead?'u':''}">${m.subject||'(No subject)'}</div><div class="msg-prev">${m.body||''}</div></div></div>`).join('')}</div></div></div></div>`;
+}
+
+function patientDash(){
+  const{appointments,testResults,messages,billing}=S.data;
+  const nextA=appointments.find(a=>a.status==='Scheduled');
+  const owed=billing.reduce((s,b)=>s+(b.patientOwes||0),0);
+  return`<div class="wb"><div><div class="wb-title">Hello, ${S.user?.email?.split('@')[0]||'Patient'} 👋</div><div class="wb-sub">Your personal health portal</div></div>${nextA?`<div class="wb-next"><div class="wb-nl">Next Appointment</div><div class="wb-nv">${fd(nextA.appointmentDate)}</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">${nextA.appointmentType||'Telehealth'}</div></div>`:''}</div>
+  <div class="stats-row"><div class="sc"><div class="sc-top"><div class="si blue">📅</div></div><div class="sv">${appointments.length}</div><div class="sl">Appointments</div></div><div class="sc"><div class="sc-top"><div class="si green">🧬</div></div><div class="sv">${testResults.length}</div><div class="sl">Test Results</div></div><div class="sc"><div class="sc-top"><div class="si teal">💬</div></div><div class="sv">${S.unread}</div><div class="sl">Unread Messages</div></div><div class="sc"><div class="sc-top"><div class="si yellow">💰</div><span class="st ${owed>0?'up':'n'}">${owed>0?'Due':'Paid'}</span></div><div class="sv">$${owed.toFixed(0)}</div><div class="sl">Balance Due</div></div></div>
+  <div class="g2" style="gap:20px">${cal(appointments)}<div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="ch"><div class="ct">Latest Test Results</div><button class="btn btn-p btn-sm" onclick="setPage('testresults')">View All</button></div><div class="cb" style="padding-top:12px">${testResults.length===0?es('🧬','No results yet'):testResults.slice(0,3).map(t=>`<div class="tli" onclick="openModal('viewTestResult',${je(t)})"><div class="tld ${t.riskLevel==='Low'?'green':'yellow'}">🧬</div><div style="flex:1"><div class="tlt">${t.resultSummary||'Genetic Panel'}</div><div class="tlm">${fd(t.resultDate)}</div></div>${sb(t.riskLevel||'Unknown')}</div>`).join('')}</div></div><div class="card"><div class="ch"><div class="ct">Recent Messages</div><button class="btn btn-p btn-sm" onclick="setPage('messages')">View All</button></div><div class="cb" style="padding-top:8px">${messages.slice(0,2).map(m=>`<div class="msg-item ${!m.isRead?'unread':''}" onclick="openModal('viewMsg',${je(m)})"><div class="msg-av">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="msg-subj ${!m.isRead?'u':''}">${m.subject||'(No subject)'}</div><div class="msg-prev">${m.body||''}</div></div></div>`).join('')}</div></div></div></div>`;
+}
+
+function pagePatients(){
+  const q=S.q.toLowerCase();
+  const ft=S.fType;
+  let f=S.data.patients.filter(p=>`${p.firstName} ${p.lastName} ${p.phone||''} ${p.city||''} ${p.patientId||''}`.toLowerCase().includes(q));
+  if(ft==='male')f=f.filter(p=>p.gender==='Male');
+  if(ft==='female')f=f.filter(p=>p.gender==='Female');
+  return`<div class="ph"><div><div class="ph-title">Patient Directory</div><div class="ph-desc">${f.length} patient${f.length!==1?'s':''} found</div></div><div class="ph-actions">${sbar('Search by name, ID, phone, city...','380px')}<button class="btn btn-p" onclick="openModal('addPatient')">+ Add Patient</button></div></div>
+  <div class="frow"><span class="flabel">Filter:</span><div class="fchip ${ft==='all'?'active':''}" onclick="S.fType='all';render()">All</div><div class="fchip ${ft==='male'?'active':''}" onclick="S.fType='male';render()">Male</div><div class="fchip ${ft==='female'?'active':''}" onclick="S.fType='female';render()">Female</div></div>
+  <div class="card"><div class="tw"><table class="dt"><thead><tr><th>Patient</th><th>ID</th><th>Age</th><th>DOB</th><th>Gender</th><th>Phone</th><th>Location</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="8">${es('👥','No patients found','Try a different search')}</td></tr>`:f.map(p=>`<tr onclick="openModal('viewPatient',${je(p)})"><td><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--p)">${ini(p.firstName,p.lastName)}</div><div style="font-weight:600;color:var(--p)">${p.firstName} ${p.lastName}</div></div></td><td><span style="background:var(--g100);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--g600)">#${p.patientId}</span></td><td><strong>${age(p.dateOfBirth)}</strong> yrs</td><td>${fd(p.dateOfBirth)}</td><td>${p.gender||'—'}</td><td>${p.phone||'—'}</td><td>${p.city?`${p.city}, ${p.state}`:'—'}</td><td onclick="event.stopPropagation()"><div style="display:flex;gap:6px"><button class="btn btn-out btn-sm" onclick="openModal('viewPatient',${je(p)})">View</button><button class="btn btn-p btn-sm" onclick="openModal('addTestResult',{patientId:${p.patientId},patientName:'${esc(p.firstName+' '+p.lastName)}'})">Add Result</button></div></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function pageProviders(){
+  const q=S.q.toLowerCase();
+  const f=S.data.providers.filter(p=>`${p.firstName} ${p.lastName} ${p.specialty||''}`.toLowerCase().includes(q));
+  return`<div class="ph"><div><div class="ph-title">Providers</div><div class="ph-desc">Genetic counselors and specialists</div></div><div class="ph-actions">${sbar('Search by name or specialty...','320px')}<button class="btn btn-p" onclick="openModal('addProvider')">+ Add Provider</button></div></div>
+  <div class="g3">${f.length===0?es('🩺','No providers found','Try a different search'):f.map(p=>`<div class="prov-card" onclick="openModal('viewProvider',${je(p)})"><div class="prov-av">${ini(p.firstName,p.lastName)}</div><div class="prov-name">${p.firstName} ${p.lastName}</div><div class="prov-spec">${p.specialty||'Specialist'}</div><div class="prov-bio">${p.bio||'No bio provided.'}</div><div class="prov-creds">${b('MD, PhD','blue')}${b('ABMG Certified','teal')}</div><div style="display:flex;align-items:center;justify-content:space-between">${p.isAcceptingPatients?b('Accepting Patients','green'):b('Not Accepting','red')}</div></div>`).join('')}</div>`;
+}
+
+function pageMyProviders(){
+  const q=S.q.toLowerCase();
+  const f=S.data.providers.filter(p=>`${p.firstName} ${p.lastName} ${p.specialty||''}`.toLowerCase().includes(q));
+  return`<div class="ph"><div><div class="ph-title">My Providers</div><div class="ph-desc">Your care team at Guardian Genetics</div></div><div class="ph-actions">${sbar('Search providers...','300px')}</div></div>
+  <div class="g3">${f.length===0?es('🩺','No providers found'):f.map(p=>`<div class="prov-card" onclick="openModal('viewProvider',${je(p)})"><div class="prov-av">${ini(p.firstName,p.lastName)}</div><div class="prov-name">${p.firstName} ${p.lastName}</div><div class="prov-spec">${p.specialty||'Specialist'}</div><div class="prov-bio">${p.bio||'No bio provided.'}</div><div class="prov-creds">${b('MD, PhD','blue')}${b('ABMG Certified','teal')}${b('Board Certified','purple')}</div><div style="display:flex;gap:8px;margin-top:12px;justify-content:center"><button class="btn btn-p btn-sm" onclick="event.stopPropagation();openModal('addAppt')">📅 Schedule</button><button class="btn btn-out btn-sm" onclick="event.stopPropagation();openModal('sendMsg')">💬 Message</button></div></div>`).join('')}</div>`;
+}
+
+function pageAppointments(){
+  const{appointments}=S.data;
+  const q=S.q.toLowerCase();
+  const sf=S.fStatus;
+  const filt=a=>`${a.appointmentType||''} ${a.notes||''}`.toLowerCase().includes(q)&&(sf==='all'||a.status===sf);
+  const upcoming=appointments.filter(a=>a.status==='Scheduled'&&filt(a));
+  const completed=appointments.filter(a=>a.status==='Completed'&&filt(a));
+  const cancelled=appointments.filter(a=>a.status==='Cancelled'&&filt(a));
+  return`<div class="ph"><div><div class="ph-title">Appointments</div><div class="ph-desc">${appointments.length} total appointments</div></div><div class="ph-actions">${sbar('Search by type or notes...','260px')}<button class="btn btn-out" onclick="toast('Calendar sync coming soon','info')">📅 Sync Calendar</button><button class="btn btn-p" onclick="openModal('addAppt')">+ Schedule</button></div></div>
+  <div class="frow"><span class="flabel">Status:</span><div class="fchip ${sf==='all'?'active':''}" onclick="S.fStatus='all';render()">All</div><div class="fchip ${sf==='Scheduled'?'active':''}" onclick="S.fStatus='Scheduled';render()">Upcoming</div><div class="fchip ${sf==='Completed'?'active':''}" onclick="S.fStatus='Completed';render()">Completed</div><div class="fchip ${sf==='Cancelled'?'active':''}" onclick="S.fStatus='Cancelled';render()">Cancelled</div></div>
+  <div class="g2" style="gap:20px;margin-bottom:24px">${cal(appointments)}<div class="card"><div class="ch"><div class="ct">Upcoming Appointments</div><span class="st up">${upcoming.length} scheduled</span></div><div class="cb" style="padding-top:12px">${upcoming.length===0?es('📅','No upcoming'):upcoming.map(a=>`<div class="tli" onclick="openModal('apptDetail',${je(a)})"><div class="tld blue">📅</div><div style="flex:1"><div class="tlt">${a.appointmentType||'Visit'}</div><div class="tlm">${fdt(a.appointmentDate)}${a.notes?' · '+a.notes:''}</div></div>${sb(a.status)}</div>`).join('')}</div></div></div>
+  ${completed.length>0||sf==='Completed'?`<div class="divider"><div class="divider-label">Completed</div><div class="divider-line"></div></div><div class="card" style="margin-bottom:20px"><div class="tw"><table class="dt"><thead><tr><th>Date</th><th>Type</th><th>${isPatient()?'Provider':'Patient'}</th><th>Notes</th><th>Status</th><th>Actions</th></tr></thead><tbody>${completed.length===0?`<tr><td colspan="6">${es('✓','No completed')}</td></tr>`:completed.map(a=>`<tr onclick="openModal('apptDetail',${je(a)})"><td style="font-weight:600;color:var(--navy)">${fdt(a.appointmentDate)}</td><td>${a.appointmentType||'General'}</td><td><span style="color:var(--p);font-weight:500;cursor:pointer" onclick="event.stopPropagation();${isPatient()?`openModal('viewProvider',${je(S.data.providers[0]||{})})`:`openModal('viewPatient',${je(S.data.patients[0]||{})})`}">${isPatient()?'Dr. Sarah Johnson':'Jane Doe'}</span></td><td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--g500)">${a.notes||'—'}</td><td>${sb(a.status)}</td><td onclick="event.stopPropagation()"><button class="btn btn-gh btn-sm" onclick="openModal('apptDetail',${je(a)})">Details</button></td></tr>`).join('')}</tbody></table></div></div>`:''}
+  ${cancelled.length>0||sf==='Cancelled'?`<div class="divider"><div class="divider-label">Cancelled</div><div class="divider-line"></div></div><div class="card"><div class="tw"><table class="dt"><thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead><tbody>${cancelled.map(a=>`<tr><td>${fd(a.appointmentDate)}</td><td>${a.appointmentType||'—'}</td><td>${sb(a.status)}</td></tr>`).join('')}</tbody></table></div></div>`:''}`;
+}
+
+function pageTestResults(){
+  const{testResults,patients}=S.data;
+  const q=S.q.toLowerCase();
+  const fr=S.fStatus;
+  let f=testResults.filter(t=>`${t.resultSummary||''} ${t.reviewedBy||''} ${t.riskLevel||''}`.toLowerCase().includes(q));
+  if(fr!=='all')f=f.filter(t=>t.riskLevel===fr);
+  return`<div class="ph"><div><div class="ph-title">Test Results</div><div class="ph-desc">Genetic test results and risk assessments</div></div><div class="ph-actions">${sbar('Search by summary, provider, risk...','300px')}${!isPatient()?`<button class="btn btn-p" onclick="openModal('addTestResult',null)">+ Add Result</button>`:''}</div></div>
+  <div class="frow"><span class="flabel">Risk:</span><div class="fchip ${fr==='all'?'active':''}" onclick="S.fStatus='all';render()">All</div><div class="fchip ${fr==='Low'?'active':''}" onclick="S.fStatus='Low';render()">Low</div><div class="fchip ${fr==='Medium'?'active':''}" onclick="S.fStatus='Medium';render()">Medium</div><div class="fchip ${fr==='High'?'active':''}" onclick="S.fStatus='High';render()">High</div></div>
+  ${!isPatient()?`<div class="card" style="margin-bottom:20px;padding:18px 20px"><div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px">🔍 Deposit Results for a Patient</div><div class="srow" style="margin-bottom:12px"><div class="sbar" style="flex:1"><span style="color:var(--g400)">👥</span><input placeholder="Search patient by name or ID..." oninput="S.qi=this.value"></div><button class="sbtn" onclick="doSearch()">Search</button></div><div style="display:flex;gap:8px;flex-wrap:wrap">${patients.slice(0,6).map(p=>`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--g50);border-radius:20px;cursor:pointer;font-size:12px;border:1px solid var(--g200);transition:var(--t2)" onclick="openModal('addTestResult',{patientId:${p.patientId},patientName:'${esc(p.firstName+' '+p.lastName)}'})"><div style="width:22px;height:22px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--p)">${ini(p.firstName,p.lastName)}</div>${p.firstName} ${p.lastName} <span style="color:var(--g400)">#${p.patientId}</span></div>`).join('')}</div></div>`:''}
+  <div class="card"><div class="tw"><table class="dt"><thead><tr><th>Patient</th><th>Patient ID</th><th>Test Summary</th><th>Test Type</th><th>Risk Level</th><th>Reviewed By</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="8">${es('🧬','No results found')}</td></tr>`:f.map(t=>`<tr onclick="openModal('viewTestResult',${je(t)})"><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--p)">JD</div><span style="font-weight:600">Jane Doe</span></div></td><td><span style="background:var(--g100);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--g600)">#1</span></td><td style="font-weight:600;color:var(--navy)">${t.resultSummary||'—'}</td><td>BRCA Panel</td><td>${sb(t.riskLevel||'Unknown')}</td><td>${t.reviewedBy||'—'}</td><td>${fd(t.resultDate)}</td><td onclick="event.stopPropagation()"><button class="btn btn-out btn-sm" onclick="openModal('viewTestResult',${je(t)})">View Details</button></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function pageMessages(){
+  const{messages,patients,providers}=S.data;
+  const q=S.q.toLowerCase();
+  const sf=S.fStatus;
+  let f=messages.filter(m=>`${m.subject||''} ${m.body||''}`.toLowerCase().includes(q));
+  if(sf==='unread')f=f.filter(m=>!m.isRead);
+  if(sf==='read')f=f.filter(m=>m.isRead);
+  const contacts=[...patients.slice(0,3),...providers.slice(0,2)];
+  return`<div class="ph"><div><div class="ph-title">Messages</div><div class="ph-desc">Secure patient-provider messaging</div></div><div class="ph-actions">${sbar('Search by subject or message body...','320px')}<button class="btn btn-p" onclick="openModal('sendMsg')">+ New Message</button></div></div>
+  <div class="frow"><span class="flabel">Filter:</span><div class="fchip ${sf==='all'?'active':''}" onclick="S.fStatus='all';render()">All</div><div class="fchip ${sf==='unread'?'active':''}" onclick="S.fStatus='unread';render()">Unread (${S.unread})</div><div class="fchip ${sf==='read'?'active':''}" onclick="S.fStatus='read';render()">Read</div></div>
+  <div class="g2" style="gap:20px"><div class="card"><div class="ch"><div class="ct">Inbox</div><div class="cs">${S.unread} unread · ${f.length} shown</div></div><div style="padding:0">${f.length===0?`<div style="padding:20px">${es('💬','No messages','Try clearing your search')}</div>`:f.map(m=>`<div class="msg-item ${!m.isRead?'unread':''}" onclick="openModal('viewMsg',${je(m)})"><div class="msg-av">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div class="msg-subj ${!m.isRead?'u':''}">${m.subject||'(No subject)'}</div>${!m.isRead?'<div class="udot"></div>':''}</div><div class="msg-prev">${m.body||''}</div></div></div>`).join('')}</div></div>
+  <div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="ch"><div class="ct">Frequent Contacts</div><button class="btn btn-gh btn-sm" onclick="toast('Viewing all contacts','info')">View All</button></div><div class="cb">${contacts.slice(0,5).map((c,i)=>`<div class="contact-item" onclick="${i<3?`openModal('viewPatient',${je(c)})`:`openModal('viewProvider',${je(c)})`}"><div class="contact-av">${ini(c.firstName,c.lastName)}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--navy)">${c.firstName} ${c.lastName}</div><div style="font-size:11px;color:var(--g400)">${i<3?'Patient':'Provider — '+(c.specialty||'')}</div></div><button class="btn btn-out btn-sm" onclick="event.stopPropagation();openModal('sendMsg')">Message</button></div>`).join('')}</div></div>
+  <div class="card"><div class="ch"><div class="ct">Recent Contacts</div><button class="btn btn-gh btn-sm">View All</button></div><div class="cb">${contacts.slice(0,5).map((c,i)=>`<div class="contact-item" onclick="${i<3?`openModal('viewPatient',${je(c)})`:`openModal('viewProvider',${je(c)})`}"><div class="contact-av">${ini(c.firstName,c.lastName)}</div><div><div style="font-size:13px;font-weight:600;color:var(--navy)">${c.firstName} ${c.lastName}</div><div style="font-size:11px;color:var(--g400)">${i<3?'Patient':'Provider'}</div></div></div>`).join('')}</div></div></div></div>`;
+}
+
+function pageBilling(){
+  const{billing}=S.data;
+  const total=billing.reduce((s,x)=>s+(x.totalAmount||0),0);
+  const insTotal=billing.reduce((s,x)=>s+(x.insuranceCovered||0),0);
+  const paid=billing.filter(x=>x.status==='Paid').reduce((s,x)=>s+(x.totalAmount||0),0);
+  const owed=billing.reduce((s,x)=>s+(x.patientOwes||0),0);
+  if(isPatient())return patientBilling(billing,total,insTotal,paid,owed);
+  const q=S.q.toLowerCase();
+  const sf=S.fStatus;
+  let f=billing.filter(x=>`${x.description||''}`.toLowerCase().includes(q));
+  if(sf!=='all')f=f.filter(x=>x.status===sf);
+  return`<div class="ph"><div><div class="ph-title">Billing</div><div class="ph-desc">Patient billing and payment records</div></div><div class="ph-actions">${sbar('Search billing records...','260px')}<button class="btn btn-p" onclick="openModal('addBill')">+ Add Bill</button></div></div>
+  <div class="frow"><span class="flabel">Status:</span><div class="fchip ${sf==='all'?'active':''}" onclick="S.fStatus='all';render()">All</div><div class="fchip ${sf==='Paid'?'active':''}" onclick="S.fStatus='Paid';render()">Paid</div><div class="fchip ${sf==='Unpaid'?'active':''}" onclick="S.fStatus='Unpaid';render()">Unpaid</div></div>
+  <div class="stats-row"><div class="sc"><div class="sc-top"><div class="si blue">💳</div></div><div class="sv">$${total.toFixed(2)}</div><div class="sl">Total Billed</div></div><div class="sc"><div class="sc-top"><div class="si teal">🛡</div></div><div class="sv">$${insTotal.toFixed(2)}</div><div class="sl">Insurance Covered</div></div><div class="sc"><div class="sc-top"><div class="si green">✅</div></div><div class="sv">$${paid.toFixed(2)}</div><div class="sl">Collected</div></div><div class="sc"><div class="sc-top"><div class="si yellow">⏳</div></div><div class="sv">$${owed.toFixed(2)}</div><div class="sl">Outstanding</div></div></div>
+  <div class="card"><div class="tw"><table class="dt"><thead><tr><th>Description</th><th>Patient</th><th>Insurance Policy</th><th>Coverage</th><th>Total</th><th>Insurance</th><th>Patient Owes</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="9">${es('💰','No billing records found')}</td></tr>`:f.map(x=>`<tr onclick="openModal('viewBill',${je(x)})"><td style="font-weight:600;color:var(--navy)">${x.description||'Service'}</td><td><span style="color:var(--p);font-weight:500;cursor:pointer" onclick="event.stopPropagation();openModal('viewPatient',${je(S.data.patients[0]||{})})">Jane Doe</span></td><td>${b('BlueCross PPO','blue')}</td><td style="color:var(--ok);font-weight:600">80%</td><td>$${(x.totalAmount||0).toFixed(2)}</td><td style="color:var(--ok)">$${(x.insuranceCovered||0).toFixed(2)}</td><td style="font-weight:600;color:${x.patientOwes>0?'var(--err)':'var(--ok)'}">$${(x.patientOwes||0).toFixed(2)}</td><td>${sb(x.status)}</td><td onclick="event.stopPropagation()">${x.status!=='Paid'?`<button class="btn btn-ok btn-sm" onclick="payBill(${x.billId})">Mark Paid</button>`:''}</td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function patientBilling(billing,total,insTotal,paid,owed){
+  const q=S.q.toLowerCase();
+  const f=billing.filter(x=>`${x.description||''}`.toLowerCase().includes(q));
+  return`<div class="ph"><div><div class="ph-title">Billing & Insurance</div><div class="ph-desc">Your billing summary and insurance coverage</div></div></div>
+  <div class="g2" style="gap:20px;margin-bottom:20px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="ins-card"><div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:16px">🛡 Your Insurance</div><div style="font-size:20px;font-weight:700;color:white;margin-bottom:4px">BlueCross BlueShield</div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:16px">PPO In-Network Plan</div>
+      <div class="ins-grid"><div><div class="ins-lbl">Member ID</div><div class="ins-val">***-**-4821</div></div><div><div class="ins-lbl">Group Number</div><div class="ins-val">GRP-00291</div></div><div><div class="ins-lbl">Coverage</div><div class="ins-val">80% In-Network</div></div><div><div class="ins-lbl">Status</div><div><span style="background:rgba(0,166,81,.25);color:#4ade80;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">Active ✓</span></div></div></div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.2)" onclick="openModal('updateInsurance')">✏ Update Insurance</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.2)" onclick="toast('Upload insurance card','info')">📎 Upload Card</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.2)" onclick="toast('Verifying coverage...','info')">✓ Verify Coverage</button></div></div>
+      <div class="card"><div class="ch"><div class="ct">Payment Methods</div><button class="btn btn-p btn-sm" onclick="openModal('addPayMethod')">+ Add</button></div><div class="cb">${S.payMethods.map(pm=>`<div class="pm-card ${pm.isDefault?'default':''}"><span style="font-size:24px">💳</span><div style="flex:1"><div style="font-weight:600;color:var(--navy)">${pm.type} ···· ${pm.last4}</div><div style="font-size:12px;color:var(--g500)">Expires ${pm.exp}${pm.isDefault?' · Default':''}</div></div>${pm.isDefault?b('Default','green'):`<button class="btn btn-gh btn-sm" onclick="toast('Set as default','success')">Set Default</button>`}</div>`).join('')}</div></div>
+    </div>
+    <div class="card"><div class="ch"><div class="ct">Cost Breakdown</div></div><div class="cb">
+      <div class="bb"><div class="brow"><span>Total Charges</span><span style="font-weight:600">$${total.toFixed(2)}</span></div><div class="brow"><span>Insurance Covered</span><span style="color:var(--ok);font-weight:600">− $${insTotal.toFixed(2)}</span></div><div class="brow"><span>Adjustments</span><span style="color:var(--ok)">− $0.00</span></div><div class="brow"><span>Patient Responsibility</span><span style="font-weight:600">$${owed.toFixed(2)}</span></div><div class="brow paid"><span>Amount Paid</span><span>$${paid.toFixed(2)}</span></div><div class="brow total" style="border-top:2px solid var(--p);padding-top:10px;margin-top:4px"><span>Final Balance Due</span><span style="color:${owed-paid>0?'var(--err)':'var(--ok)'}">$${Math.max(0,owed-paid).toFixed(2)}</span></div></div>
+      <div class="divider"><div class="divider-label">Actions</div><div class="divider-line"></div></div>
+      <div class="ag"><div class="ab" onclick="openModal('payBill',null)"><div class="ab-icon">💳</div><div class="ab-lbl">Pay Balance</div><div class="ab-desc">Pay $${Math.max(0,owed-paid).toFixed(2)} now</div></div><div class="ab" onclick="toast('Setting up payment plan...','info')"><div class="ab-icon">📋</div><div class="ab-lbl">Payment Plan</div><div class="ab-desc">Set up installments</div></div><div class="ab" onclick="toast('Downloading invoice...','info')"><div class="ab-icon">⬇</div><div class="ab-lbl">Download Invoice</div><div class="ab-desc">PDF statement</div></div><div class="ab" onclick="toast('Connecting to billing support...','info')"><div class="ab-icon">📞</div><div class="ab-lbl">Billing Support</div><div class="ab-desc">Contact our team</div></div></div>
+    </div></div>
+  </div>
+  <div class="divider"><div class="divider-label">Billing History</div><div class="divider-line"></div></div>
+  <div style="margin-bottom:12px">${sbar('Search billing history...','320px')}</div>
+  <div class="card"><div class="tw"><table class="dt"><thead><tr><th>Description</th><th>Total</th><th>Insurance</th><th>Your Cost</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="6">${es('💰','No bills found')}</td></tr>`:f.map(x=>`<tr onclick="openModal('viewBill',${je(x)})"><td style="font-weight:600;color:var(--navy)">${x.description||'Service'}</td><td>$${(x.totalAmount||0).toFixed(2)}</td><td style="color:var(--ok)">$${(x.insuranceCovered||0).toFixed(2)}</td><td style="font-weight:600;color:${x.patientOwes>0?'var(--err)':'var(--ok)'}">$${(x.patientOwes||0).toFixed(2)}</td><td>${sb(x.status)}</td><td onclick="event.stopPropagation()">${x.status!=='Paid'?`<button class="btn btn-p btn-sm" onclick="openModal('payBill',${je(x)})">Pay Now</button>`:b('Paid','green')}</td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+/* ── MODALS ── */
+function openModal(type,data){S.modal=type;S.md=data||null;S.tab=0;renderModal()}
+function closeModal(){S.modal=null;S.md=null;$('modal-root').innerHTML=''}
+
+function renderModal(){
+  const root=$('modal-root');if(!S.modal){root.innerHTML='';return}
+  let body='',sz='';const d=S.md;
+
+  if(S.modal==='calDay'&&d){
+    body=`<div class="mh"><div class="mt">Appointments — ${d.day} ${new Date(S.calY,S.calM).toLocaleString('default',{month:'long'})}</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">${d.appts.map(a=>`<div style="background:var(--pl);border-radius:var(--r);padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:600;color:var(--navy)">${a.appointmentType||'Appointment'}</div><div style="font-size:12px;color:var(--g600);margin-top:3px">${fdt(a.appointmentDate)}</div></div><div style="display:flex;gap:8px;align-items:center">${sb(a.status)}<button class="btn btn-p btn-sm" onclick="closeModal();openModal('apptDetail',${je(a)})">View</button>${a.status==='Scheduled'?`<button class="btn btn-err btn-sm" onclick="updateAppt(${a.appointmentId},'Cancelled');closeModal()">Cancel</button>`:''}</div></div>`).join('')}</div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button><button class="btn btn-p" onclick="closeModal();openModal('addAppt')">+ Schedule New</button></div>`;
+  }
+
+  else if(S.modal==='viewPatient'&&d){
+    sz='modal-lg';
+    const tabs=['Overview','Vitals','Insurance','Medical History','Billing','Appointments'];
+    body=`<div class="mh"><div class="mt">Patient Profile</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div class="prof-hero"><div class="prof-av">${ini(d.firstName,d.lastName)}</div><div style="flex:1"><div class="prof-name">${d.firstName||''} ${d.lastName||''}</div><div class="prof-meta">ID #${d.patientId||'—'} · Age ${age(d.dateOfBirth)} · ${d.gender||'—'}</div><div class="prof-meta" style="margin-top:4px">${d.phone||''} · ${d.city?`${d.city}, ${d.state}`:''}</div></div><div class="prof-actions"><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('addAppt')">📅 Schedule</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('sendMsg')">💬 Message</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('addTestResult',{patientId:d.patientId,patientName:(d.firstName+' '+d.lastName)})">🧬 Result</button></div></div>
+      <div class="tabs">${tabs.map((t,i)=>`<div class="tab ${S.tab===i?'active':''}" onclick="S.tab=${i};renderModal()">${t}</div>`).join('')}</div>
+      ${S.tab===0?`<div class="g2" style="gap:14px"><div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;margin-bottom:10px">General Information</div><div class="ir"><span class="ir-lbl">Full Name</span><span class="ir-val">${d.firstName||''} ${d.lastName||''}</span></div><div class="ir"><span class="ir-lbl">Age</span><span class="ir-val">${age(d.dateOfBirth)} years old</span></div><div class="ir"><span class="ir-lbl">Date of Birth</span><span class="ir-val">${fd(d.dateOfBirth)}</span></div><div class="ir"><span class="ir-lbl">Gender</span><span class="ir-val">${d.gender||'—'}</span></div><div class="ir"><span class="ir-lbl">Phone</span><span class="ir-val">${d.phone||'—'}</span></div><div class="ir"><span class="ir-lbl">Location</span><span class="ir-val">${d.city?`${d.city}, ${d.state}`:'—'}</span></div></div><div><div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;margin-bottom:10px">Quick Actions</div><div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-p btn-sm" onclick="closeModal();openModal('addAppt')" style="justify-content:flex-start">📅 Schedule Appointment</button><button class="btn btn-out btn-sm" onclick="closeModal();openModal('sendMsg')" style="justify-content:flex-start">💬 Send Message</button><button class="btn btn-teal btn-sm" onclick="closeModal();openModal('addTestResult',{patientId:d.patientId,patientName:(d.firstName+' '+d.lastName)})" style="justify-content:flex-start">🧬 Add Test Result</button><button class="btn btn-sec btn-sm" onclick="S.tab=4;renderModal()" style="justify-content:flex-start">💰 View Billing</button><button class="btn btn-sec btn-sm" onclick="S.tab=2;renderModal()" style="justify-content:flex-start">🛡 View Insurance</button></div></div></div>`:''}
+      ${S.tab===1?`<div class="g4"><div class="vc"><div class="vc-icon">❤️</div><div class="vc-val">72 bpm</div><div class="vc-lbl">Heart Rate</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">🩸</div><div class="vc-val">118/76</div><div class="vc-lbl">Blood Pressure</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">🌡️</div><div class="vc-val">98.6°F</div><div class="vc-lbl">Temperature</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">⚖️</div><div class="vc-val">145 lbs</div><div class="vc-lbl">Weight</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">📏</div><div class="vc-val">5'6"</div><div class="vc-lbl">Height</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">🫁</div><div class="vc-val">98%</div><div class="vc-lbl">O2 Sat</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">🧪</div><div class="vc-val">5.4</div><div class="vc-lbl">A1C</div><div class="vc-st ok">Normal</div></div><div class="vc"><div class="vc-icon">💊</div><div class="vc-val">180</div><div class="vc-lbl">Cholesterol</div><div class="vc-st ok">Normal</div></div></div>`:''}
+      ${S.tab===2?`<div class="ins-card" style="margin-bottom:16px"><div style="font-size:18px;font-weight:700;color:white;margin-bottom:16px">BlueCross BlueShield</div><div class="ins-grid"><div><div class="ins-lbl">Member ID</div><div class="ins-val">***-**-4821</div></div><div><div class="ins-lbl">Group Number</div><div class="ins-val">GRP-00291</div></div><div><div class="ins-lbl">Plan</div><div class="ins-val">PPO In-Network</div></div><div><div class="ins-lbl">Coverage</div><div class="ins-val">80% In-Network</div></div></div></div><div class="g2" style="gap:10px"><div style="background:var(--g50);padding:12px;border-radius:var(--rs)"><div style="font-size:11px;color:var(--g500);margin-bottom:4px">Deductible</div><div style="font-weight:600;color:var(--navy)">$1,500 / $3,000 family</div></div><div style="background:var(--g50);padding:12px;border-radius:var(--rs)"><div style="font-size:11px;color:var(--g500);margin-bottom:4px">Out-of-Pocket Max</div><div style="font-weight:600;color:var(--navy)">$5,000 individual</div></div></div>`:''}
+      ${S.tab===3?`<div class="fdrop" onclick="toast('File upload coming soon','info')" style="margin-bottom:16px"><div class="fdrop-icon">📁</div><div class="fdrop-text">Upload Medical History</div><div class="fdrop-sub">PDF, DOCX — from any previous provider or institution</div></div><div style="text-align:center;color:var(--g400);font-size:13px">No records uploaded yet</div>`:''}
+      ${S.tab===4?`<div class="bb">${S.data.billing.map(x=>`<div class="brow"><span>${x.description||'Service'}</span><span style="display:flex;align-items:center;gap:10px">$${(x.totalAmount||0).toFixed(2)} ${sb(x.status)}</span></div>`).join('')||'<div class="brow"><span style="color:var(--g400)">No billing records</span></div>'}</div>`:''}
+      ${S.tab===5?`<div class="tl">${S.data.appointments.map(a=>`<div class="tli" onclick="closeModal();openModal('apptDetail',${je(a)})"><div class="tld ${a.status==='Completed'?'green':'blue'}">${a.status==='Completed'?'✓':'📅'}</div><div style="flex:1"><div class="tlt">${a.appointmentType||'Visit'}</div><div class="tlm">${fdt(a.appointmentDate)}</div></div>${sb(a.status)}</div>`).join('')||es('📅','No appointments')}</div>`:''}
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button></div>`;
+  }
+
+  else if(S.modal==='viewProvider'&&d){
+    sz='modal-lg';
+    body=`<div class="mh"><div class="mt">Provider Profile</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb"><div class="prof-hero"><div class="prof-av">${ini(d.firstName,d.lastName)}</div><div style="flex:1"><div class="prof-name">${d.firstName||''} ${d.lastName||''}</div><div class="prof-meta">${d.specialty||'Specialist'} · Guardian Genetics</div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">${d.isAcceptingPatients?b('Accepting Patients','green'):b('Not Accepting','red')}${b('MD, PhD','blue')}${b('ABMG Certified','teal')}</div></div></div>
+    <div class="g2" style="gap:16px;margin-bottom:16px">
+      <div><div class="divider"><div class="divider-label">About</div><div class="divider-line"></div></div><p style="font-size:14px;color:var(--g700);line-height:1.7;margin-bottom:16px">${d.bio||'No bio available.'}</p>
+      <div class="divider"><div class="divider-label">Credentials & Certifications</div><div class="divider-line"></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--g50);border-radius:var(--rs)"><span>🎓</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">MD, PhD — Medical Genetics</div><div style="font-size:11px;color:var(--g500)">Johns Hopkins University</div></div></div><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--g50);border-radius:var(--rs)"><span>🏅</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">ABMG Board Certified</div><div style="font-size:11px;color:var(--g500)">American Board of Medical Genetics</div></div></div><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--g50);border-radius:var(--rs)"><span>⭐</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">Licensed Genetic Counselor</div><div style="font-size:11px;color:var(--g500)">State of Maryland</div></div></div></div></div>
+      <div><div class="divider"><div class="divider-label">Contact & Facility</div><div class="divider-line"></div></div><div class="ir"><span class="ir-lbl">Facility</span><span class="ir-val">Guardian Genetics — Salisbury, MD</span></div><div class="ir"><span class="ir-lbl">Phone</span><span class="ir-val">${d.phone||'—'}</span></div><div class="ir"><span class="ir-lbl">Specialization</span><span class="ir-val">${d.specialty||'—'}</span></div><div class="ir"><span class="ir-lbl">Status</span><span class="ir-val">${d.isAcceptingPatients?'Accepting new patients':'Not accepting'}</span></div></div>
+    </div></div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button><button class="btn btn-out" onclick="closeModal();openModal('sendMsg')">💬 Message</button><button class="btn btn-p" onclick="closeModal();openModal('addAppt')">📅 Schedule</button></div>`;
+  }
+
+  else if(S.modal==='viewTestResult'&&d){
+    sz='modal-lg';
+    body=`<div class="mh"><div class="mt">Test Result Details</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--pl);border-radius:var(--r);margin-bottom:20px"><div><div style="font-family:'Lora',serif;font-size:20px;color:var(--navy)">${d.resultSummary||'Genetic Panel'}</div><div style="font-size:13px;color:var(--g500);margin-top:4px">Date: ${fd(d.resultDate)} · Ordered & Reviewed by: ${d.reviewedBy||'Provider'}</div></div>${sb(d.riskLevel||'Unknown')}</div>
+      <div class="g2" style="gap:14px;margin-bottom:16px">
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Patient</div><div style="font-weight:600;color:var(--navy)">Jane Doe</div><div style="font-size:12px;color:var(--g500)">Patient ID #1</div></div>
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Test Type</div><div style="font-weight:600;color:var(--navy)">BRCA1/BRCA2 Gene Mutation Panel</div></div>
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Who Ordered</div><div style="font-weight:600;color:var(--navy)">${d.reviewedBy||'Dr. Sarah Johnson'}</div></div>
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Result</div><div style="font-weight:600;color:var(--ok)">${d.resultSummary||'No pathogenic variants detected'}</div></div>
+      </div>
+      ${d.clinicalNotes?`<div style="background:#f0f7ff;border:1px solid #bfdbfe;padding:14px;border-radius:var(--r);margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--p);margin-bottom:6px">📝 Clinical Notes from Provider</div><div style="font-size:14px;color:var(--g700);line-height:1.7">${d.clinicalNotes}</div></div>`:''}
+      <div class="divider"><div class="divider-label">Vitals at Time of Test</div><div class="divider-line"></div></div>
+      <div class="g4" style="margin-bottom:16px"><div class="vc"><div class="vc-icon">❤️</div><div class="vc-val">72</div><div class="vc-lbl">Heart Rate</div></div><div class="vc"><div class="vc-icon">🩸</div><div class="vc-val">118/76</div><div class="vc-lbl">BP</div></div><div class="vc"><div class="vc-icon">⚖️</div><div class="vc-val">145 lbs</div><div class="vc-lbl">Weight</div></div><div class="vc"><div class="vc-icon">🌡️</div><div class="vc-val">98.6°F</div><div class="vc-lbl">Temp</div></div></div>
+      <div class="divider"><div class="divider-label">Supporting Documents</div><div class="divider-line"></div></div>
+      <div class="fdrop" onclick="toast('File storage coming soon','info')"><div class="fdrop-icon">📎</div><div class="fdrop-text">Supporting Documents</div><div class="fdrop-sub">No documents attached · Click to upload</div></div>
+      ${!isPatient()?`<div class="divider"><div class="divider-label">Add / Update Notes</div><div class="divider-line"></div></div><textarea class="fc" rows="3" placeholder="Add or update clinical notes...">${d.clinicalNotes||''}</textarea>`:''}
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button>${!isPatient()?`<button class="btn btn-p" onclick="toast('Notes saved','success');closeModal()">Save Notes</button>`:''}</div>`;
+  }
+
+  else if(S.modal==='viewMsg'&&d){
+    sz='modal-lg';
+    body=`<div class="mh"><div class="mt">${d.subject||'Message'}</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--g50);border-radius:var(--r);margin-bottom:16px">
+        <div class="msg-av">${(d.subject||'M')[0].toUpperCase()}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--navy)">From: User #${d.senderId||'—'}</div><div style="font-size:12px;color:var(--g500)">To: User #${d.receiverId||'—'} · Subject: <strong>${d.subject||'—'}</strong></div></div>
+        ${!d.isRead?`<button class="btn btn-out btn-sm" onclick="markRead(${d.messageId})">Mark Read</button>`:b('Read','green')}
+      </div>
+      <div class="mthread"><div class="mti"><div class="mti-sender">User #${d.senderId} — Original Message</div><div class="mti-body">${d.body||''}</div></div></div>
+      <div class="fdrop" onclick="toast('File attachment coming soon','info')" style="margin-bottom:16px"><div class="fdrop-icon">📎</div><div class="fdrop-text">Attach a file to your reply</div><div class="fdrop-sub">PDF, images, documents up to 25MB</div></div>
+      <div class="divider"><div class="divider-label">Reply</div><div class="divider-line"></div></div>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="ff" style="margin-bottom:0"><label class="fl">To</label><input class="fc" value="User #${d.senderId||1}" readonly></div>
+        <div class="ff" style="margin-bottom:0"><label class="fl">CC</label><input class="fc" placeholder="Add CC recipients..."></div>
+      </div>
+      <div class="ff"><label class="fl">Subject</label><input class="fc" value="Re: ${d.subject||''}"></div>
+      <textarea class="fc" rows="4" placeholder="Write your reply..."></textarea>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button><button class="btn btn-p" onclick="toast('Reply sent','success');closeModal()">Send Reply</button></div>`;
+  }
+
+  else if(S.modal==='apptDetail'&&d){
+    sz='modal-lg';
+    body=`<div class="mh"><div class="mt">Appointment Details</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="background:var(--pl);border-radius:var(--r);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-family:'Lora',serif;font-size:18px;color:var(--navy)">${d.appointmentType||'Appointment'}</div><div style="font-size:13px;color:var(--g600);margin-top:4px">${fdt(d.appointmentDate)}</div></div>${sb(d.status)}</div>
+      ${d.appointmentType==='Telehealth'?`<div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:var(--r);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#2e7d32">📹 Telehealth Meeting</div><div style="font-size:12px;color:#388e3c;margin-top:3px">Zoom meeting will be set up automatically</div></div><button class="btn btn-ok btn-sm" onclick="toast('Opening Zoom...','info')">Join Meeting</button></div>`:''}
+      <div class="g2" style="gap:14px;margin-bottom:16px">
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:8px">${isPatient()?'Provider Info':'Patient Info'}</div>${isPatient()?`<div style="font-weight:600;color:var(--p);cursor:pointer" onclick="closeModal();openModal('viewProvider',${je(S.data.providers[0]||{})})">Dr. Sarah Johnson</div><div style="font-size:12px;color:var(--g500)">Genetic Counseling</div>`:`<div style="font-weight:600;color:var(--p);cursor:pointer" onclick="closeModal();openModal('viewPatient',${je(S.data.patients[0]||{})})">Jane Doe</div><div style="font-size:12px;color:var(--g500)">Patient #1</div>`}</div>
+        <div style="background:var(--g50);padding:14px;border-radius:var(--r)"><div style="font-size:11px;color:var(--g500);text-transform:uppercase;font-weight:700;margin-bottom:8px">Type</div><div style="font-weight:600;color:var(--navy)">${d.appointmentType||'General'}</div></div>
+      </div>
+      ${d.notes?`<div style="background:var(--g50);padding:14px;border-radius:var(--r);margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--g500);margin-bottom:6px">Notes</div><div style="font-size:13px;color:var(--g700)">${d.notes}</div></div>`:''}
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-out btn-sm" onclick="toast('Adding to Google Calendar...','info')">📅 Google Calendar</button><button class="btn btn-out btn-sm" onclick="toast('Adding to Apple Calendar...','info')">🍎 Apple Calendar</button>${d.status==='Scheduled'?`<button class="btn btn-ok btn-sm" onclick="updateAppt(${d.appointmentId},'Completed');closeModal()">✓ Complete</button><button class="btn btn-err btn-sm" onclick="updateAppt(${d.appointmentId},'Cancelled');closeModal()">✕ Cancel</button>`:''}</div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button></div>`;
+  }
+
+  else if(S.modal==='viewBill'&&d){
+    body=`<div class="mh"><div class="mt">Bill Details</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="font-family:'Lora',serif;font-size:18px;color:var(--navy);margin-bottom:4px">${d.description||'Service'}</div>
+      <div style="margin-bottom:16px">${sb(d.status)}</div>
+      <div class="ir"><span class="ir-lbl">Patient</span><span class="ir-val" style="color:var(--p);cursor:pointer" onclick="closeModal();openModal('viewPatient',${je(S.data.patients[0]||{})})">Jane Doe — #1</span></div>
+      <div class="ir"><span class="ir-lbl">Insurance Policy</span><span class="ir-val">${b('BlueCross PPO','blue')}</span></div>
+      <div class="ir"><span class="ir-lbl">Coverage Rate</span><span class="ir-val" style="color:var(--ok);font-weight:600">80%</span></div>
+      <div class="bb" style="margin-top:16px">
+        <div class="brow"><span>Total Charges</span><span>$${(d.totalAmount||0).toFixed(2)}</span></div>
+        <div class="brow"><span>Insurance Covered</span><span style="color:var(--ok)">− $${(d.insuranceCovered||0).toFixed(2)}</span></div>
+        <div class="brow"><span>Adjustments</span><span style="color:var(--ok)">− $0.00</span></div>
+        <div class="brow total"><span>Patient Responsibility</span><span style="color:${d.patientOwes>0?'var(--err)':'var(--ok)'}">$${(d.patientOwes||0).toFixed(2)}</span></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Close</button>${d.status!=='Paid'?`<button class="btn btn-ok" onclick="payBill(${d.billId});closeModal()">Mark Paid</button>`:''}</div>`;
+  }
+
+  else if(S.modal==='payBill'){
+    body=`<div class="mh"><div class="mt">Pay Balance</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="background:var(--pl);padding:16px;border-radius:var(--r);margin-bottom:20px;text-align:center"><div style="font-family:'Lora',serif;font-size:28px;color:var(--navy)">${d?`$${(d.patientOwes||0).toFixed(2)}`:'$70.00'}</div><div style="font-size:13px;color:var(--g600);margin-top:4px">${d?d.description:'Balance Due'}</div></div>
+      <div class="ff"><label class="fl">Select Payment Method</label>${S.payMethods.map(pm=>`<div class="pm-card" style="cursor:pointer" onclick="document.querySelectorAll('.pm-card').forEach(x=>x.style.borderColor='var(--g200)');this.style.borderColor='var(--p)'"><span style="font-size:20px">💳</span><div style="flex:1"><div style="font-weight:600;color:var(--navy)">${pm.type} ···· ${pm.last4}</div><div style="font-size:12px;color:var(--g500)">Expires ${pm.exp}</div></div>${pm.isDefault?b('Default','green'):''}</div>`).join('')}</div>
+      <div class="ff"><label class="fl">Or Enter New Card</label><input class="fc" placeholder="Card number"></div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-ok btn-lg" onclick="toast('Payment processed successfully!','success');closeModal()">💳 Pay Now</button></div>`;
+  }
+
+  else if(S.modal==='addPayMethod'){
+    body=`<div class="mh"><div class="mt">Add Payment Method</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb"><div class="ff"><label class="fl">Card Number</label><input class="fc" placeholder="1234 5678 9012 3456"></div><div class="g2"><div class="ff"><label class="fl">Expiration</label><input class="fc" placeholder="MM/YY"></div><div class="ff"><label class="fl">CVV</label><input class="fc" placeholder="123" type="password"></div></div><div class="ff"><label class="fl">Name on Card</label><input class="fc" placeholder="Jane Doe"></div><div class="ff"><label class="fl">Billing ZIP</label><input class="fc" placeholder="21801"></div></div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="S.payMethods.push({id:S.payMethods.length+1,type:'Visa',last4:'0000',exp:'01/30',isDefault:false});toast('Payment method added','success');closeModal();render()">Add Card</button></div>`;
+  }
+
+  else if(S.modal==='addPatient'){
+    body=`<div class="mh"><div class="mt">Add New Patient</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb"><div class="g2"><div class="ff"><label class="fl">First Name</label><input class="fc" id="m-fn" placeholder="Jane"></div><div class="ff"><label class="fl">Last Name</label><input class="fc" id="m-ln" placeholder="Doe"></div></div><div class="g2"><div class="ff"><label class="fl">Date of Birth</label><input class="fc" id="m-dob" type="date"></div><div class="ff"><label class="fl">Gender</label><select class="fc" id="m-gnd"><option>Female</option><option>Male</option><option>Other</option></select></div></div><div class="ff"><label class="fl">Phone</label><input class="fc" id="m-ph" placeholder="410-555-0000"></div><div class="g2"><div class="ff"><label class="fl">City</label><input class="fc" id="m-cy" placeholder="Salisbury"></div><div class="ff"><label class="fl">State</label><input class="fc" id="m-st" placeholder="MD"></div></div></div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitPatient()">Add Patient</button></div>`;
+  }
+
+  else if(S.modal==='addAppt'){
+    const providers=S.data.providers;
+    body=`<div class="mh"><div class="mt">Schedule Appointment</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div class="ff"><label class="fl">Date & Time</label><input class="fc" id="m-adt" type="datetime-local"></div>
+      <div class="ff"><label class="fl">Provider</label><select class="fc" id="m-aprov">${providers.length===0?'<option value="1">Dr. Sarah Johnson</option>':providers.map(p=>`<option value="${p.providerId}">${p.firstName} ${p.lastName} — ${p.specialty||'Specialist'}</option>`).join('')}</select></div>
+      <div class="ff"><label class="fl">Type</label><select class="fc" id="m-aty" onchange="document.getElementById('zoom-note').style.display=this.value==='Telehealth'?'block':'none'"><option>Telehealth</option><option>In-Person</option><option>Follow-Up</option><option>Consultation</option></select></div>
+      <div id="zoom-note" style="background:#e8f5e9;border-radius:var(--rs);padding:10px 14px;font-size:13px;color:#2e7d32;margin-bottom:14px">📹 A Zoom meeting will be created automatically</div>
+      <div class="ff"><label class="fl">Notes</label><textarea class="fc" id="m-ant" rows="3" placeholder="Optional notes..."></textarea></div>
+      <div style="display:flex;gap:8px;margin-top:4px"><button class="btn btn-out btn-sm" onclick="toast('Google Calendar sync coming soon','info')">📅 Google</button><button class="btn btn-out btn-sm" onclick="toast('Apple Calendar sync coming soon','info')">🍎 Apple</button></div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitAppt()">Schedule</button></div>`;
+  }
+
+  else if(S.modal==='addTestResult'){
+    sz='modal-lg';
+    body=`<div class="mh"><div class="mt">Add Test Result</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div style="background:var(--pl);padding:12px 16px;border-radius:var(--rs);margin-bottom:16px;font-size:13px;color:var(--p);font-weight:600">Depositing results for: ${d?.patientName||'Select Patient Below'} ${d?.patientId?`(ID #${d.patientId})`:''}</div>
+      <div class="ff"><label class="fl">Patient</label><select class="fc" id="m-tpat">${S.data.patients.map(p=>`<option value="${p.patientId}" ${d?.patientId===p.patientId?'selected':''}>${p.firstName} ${p.lastName} — #${p.patientId}</option>`).join('')}</select></div>
+      <div class="g2"><div class="ff"><label class="fl">Test Type</label><select class="fc" id="m-ttype"><option>BRCA1/BRCA2 Panel</option><option>Whole Genome Sequencing</option><option>Chromosomal Microarray</option><option>Carrier Screening</option><option>Pharmacogenomics</option><option>Lynch Syndrome Panel</option><option>Hereditary Cancer Panel</option></select></div><div class="ff"><label class="fl">Risk Level</label><select class="fc" id="m-trisk"><option>Low</option><option>Medium</option><option>High</option></select></div></div>
+      <div class="ff"><label class="fl">Result Summary</label><input class="fc" id="m-tsum" placeholder="e.g. No pathogenic variants detected"></div>
+      <div class="ff"><label class="fl">Clinical Notes</label><textarea class="fc" id="m-tnotes" rows="3" placeholder="Add clinical notes..."></textarea></div>
+      <div class="divider"><div class="divider-label">Supporting Documents</div><div class="divider-line"></div></div>
+      <div class="fdrop" onclick="toast('File storage coming soon','info')"><div class="fdrop-icon">📎</div><div class="fdrop-text">Upload Lab Reports & Supporting Documents</div><div class="fdrop-sub">PDF, images, lab reports up to 25MB</div></div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitTestResult()">Save Result</button></div>`;
+  }
+
+  else if(S.modal==='sendMsg'){
+    body=`<div class="mh"><div class="mt">New Message</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div class="ff"><label class="fl">To (User ID)</label><input class="fc" id="m-mto" type="number" placeholder="1"></div>
+      <div class="ff"><label class="fl">CC</label><input class="fc" id="m-mcc" placeholder="Add CC recipients..."></div>
+      <div class="ff"><label class="fl">Subject</label><input class="fc" id="m-msub" placeholder="Subject line..."></div>
+      <div class="ff"><label class="fl">Message</label><textarea class="fc" id="m-mbody" rows="4" placeholder="Write your message..."></textarea></div>
+      <div class="fdrop" onclick="toast('File attachment coming soon','info')" style="margin-top:4px"><div class="fdrop-icon">📎</div><div class="fdrop-text">Attach a file</div><div class="fdrop-sub">Click to browse</div></div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitMsg()">Send Message</button></div>`;
+  }
+
+  else if(S.modal==='addBill'){
+    body=`<div class="mh"><div class="mt">Add Bill</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb">
+      <div class="ff"><label class="fl">Patient</label><select class="fc" id="m-bpat">${S.data.patients.map(p=>`<option value="${p.patientId}">${p.firstName} ${p.lastName} — #${p.patientId}</option>`).join('')}</select></div>
+      <div class="ff"><label class="fl">Description</label><input class="fc" id="m-bdesc" placeholder="Genetic Counseling Session"></div>
+      <div class="ff"><label class="fl">Insurance Policy <span style="color:var(--g400);font-weight:400">(auto-calculates coverage)</span></label>
+        <select class="fc" id="m-bpolicy" onchange="autoIns(this.value)">${INSURANCES.map(ins=>`<option value="${ins.val}">${ins.label}</option>`).join('')}</select>
+      </div>
+      <div class="g2"><div class="ff"><label class="fl">Total Amount ($)</label><input class="fc" id="m-btot" type="number" placeholder="350" oninput="autoCalcBill()"></div><div class="ff"><label class="fl">Insurance Covered ($) <span style="color:var(--p);font-size:11px">auto-filled</span></label><input class="fc" id="m-binsamt" type="number" placeholder="auto" oninput="autoCalcBill()"></div></div>
+      <div style="background:var(--g50);padding:14px 16px;border-radius:var(--rs)">
+        <div class="brow"><span style="color:var(--g600)">Insurance Coverage</span><span id="m-binspct" style="color:var(--ok);font-weight:600">0% — $0.00</span></div>
+        <div class="brow total"><span>Patient Responsibility</span><span id="m-bowed" style="font-weight:700;color:var(--navy)">$0.00</span></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="submitBill()">Add Bill</button></div>`;
+  }
+
+  else if(S.modal==='updateInsurance'){
+    body=`<div class="mh"><div class="mt">Update Insurance</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb"><div class="ff"><label class="fl">Insurance Provider</label><select class="fc"><option>BlueCross BlueShield</option><option>Aetna</option><option>UnitedHealth</option><option>Cigna</option><option>Humana</option><option>Medicare</option><option>Medicaid</option><option>Kaiser Permanente</option><option>Anthem Blue Cross</option><option>Tricare</option></select></div><div class="g2"><div class="ff"><label class="fl">Member ID</label><input class="fc" placeholder="Member ID" value="4821"></div><div class="ff"><label class="fl">Group Number</label><input class="fc" placeholder="Group #" value="GRP-00291"></div></div><div class="g2"><div class="ff"><label class="fl">Plan Type</label><select class="fc"><option>PPO</option><option>HMO</option><option>EPO</option><option>POS</option></select></div><div class="ff"><label class="fl">Effective Date</label><input class="fc" type="date"></div></div><div class="fdrop"><div class="fdrop-icon">🪪</div><div class="fdrop-text">Upload Insurance Card</div><div class="fdrop-sub">Front and back — JPG, PNG, PDF</div></div></div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="toast('Insurance updated','success');closeModal()">Save Changes</button></div>`;
+  }
+
+  else if(S.modal==='addProvider'){
+    body=`<div class="mh"><div class="mt">Add Provider</div><button class="mc" onclick="closeModal()">×</button></div>
+    <div class="mb"><div class="g2"><div class="ff"><label class="fl">First Name</label><input class="fc" id="m-pfn" placeholder="Dr. Sarah"></div><div class="ff"><label class="fl">Last Name</label><input class="fc" id="m-pln" placeholder="Johnson"></div></div><div class="ff"><label class="fl">Specialty</label><input class="fc" id="m-pspec" placeholder="Genetic Counseling"></div><div class="ff"><label class="fl">Phone</label><input class="fc" id="m-pph" placeholder="410-555-0202"></div><div class="ff"><label class="fl">Bio</label><textarea class="fc" id="m-pbio" rows="3" placeholder="Brief bio..."></textarea></div></div>
+    <div class="mf"><button class="btn btn-sec" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="toast('Provider added','success');closeModal()">Add Provider</button></div>`;
+  }
+
+  root.innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal ${sz}">${body}</div></div>`;
+}
+
+function autoIns(pct){const tot=parseFloat($('m-btot')?.value||0);const p=parseFloat(pct||0);const ins=(tot*p/100);if($('m-binsamt'))$('m-binsamt').value=ins.toFixed(2);if($('m-binspct'))$('m-binspct').textContent=`${p}% — $${ins.toFixed(2)}`;if($('m-bowed'))$('m-bowed').textContent=`$${Math.max(0,tot-ins).toFixed(2)}`}
+function autoCalcBill(){const tot=parseFloat($('m-btot')?.value||0);const ins=parseFloat($('m-binsamt')?.value||0);const pct=parseFloat($('m-bpolicy')?.value||0);if($('m-binspct'))$('m-binspct').textContent=`${pct}% — $${ins.toFixed(2)}`;if($('m-bowed'))$('m-bowed').textContent=`$${Math.max(0,tot-ins).toFixed(2)}`}
+
+async function submitPatient(){const r=await api('POST','/patients',{userId:S.user.userId,firstName:$('m-fn').value,lastName:$('m-ln').value,dateOfBirth:$('m-dob').value,gender:$('m-gnd').value,phone:$('m-ph').value,city:$('m-cy').value,state:$('m-st').value});if(r.ok){toast('Patient added','success');closeModal();loadData()}else toast('Failed','error')}
+async function submitAppt(){
+  const provId=parseInt($('m-aprov')?.value||1);
+  const apptDate=$('m-adt').value;
+  const apptType=$('m-aty').value;
+  const notes=$('m-ant').value;
+  const r=await api('POST','/appointments',{patientId:1,providerId:provId,appointmentDate:apptDate,appointmentType:apptType,notes});
+  if(r.ok){
+    // send message to both patient and provider
+    const subject=`Appointment Scheduled — ${apptType} on ${new Date(apptDate).toLocaleDateString()}`;
+    const body=`Your ${apptType} appointment has been scheduled for ${new Date(apptDate).toLocaleString()}. ${apptType==='Telehealth'?'A Zoom link will be sent prior to the appointment.':'Please arrive 10 minutes early.'} ${notes?'Notes: '+notes:''}`;
+    await api('POST','/messages',{senderId:S.user.userId,receiverId:1,subject,body});
+    await api('POST','/messages',{senderId:S.user.userId,receiverId:provId,subject:`Patient Appointment — ${apptType} on ${new Date(apptDate).toLocaleDateString()}`,body:`A new appointment has been scheduled with a patient. ${apptType} on ${new Date(apptDate).toLocaleString()}. ${notes?'Notes: '+notes:''}`});
+    toast('Appointment scheduled & notifications sent!','success');closeModal();loadData();
+  }else toast('Failed','error');
+}
+async function updateAppt(id,status){const r=await api('PUT',`/appointments/${id}/status`,{status});if(r.ok){toast(`Marked ${status}`,'success');loadData()}else toast('Failed','error')}
+async function submitTestResult(){const r=await api('POST','/testresults',{testOrderId:1,resultSummary:$('m-tsum').value,riskLevel:$('m-trisk').value,clinicalNotes:$('m-tnotes').value,reviewedBy:S.user?.email,resultDate:new Date().toISOString()});if(r.ok){toast('Result saved','success');closeModal();loadData()}else toast('Failed','error')}
+async function submitMsg(){const r=await api('POST','/messages',{senderId:S.user.userId,receiverId:parseInt($('m-mto').value),subject:$('m-msub').value,body:$('m-mbody').value});if(r.ok){toast('Message sent','success');closeModal();loadData()}else toast('Failed','error')}
+async function markRead(id){const r=await api('PUT',`/messages/${id}/read`,{});if(r.ok){toast('Marked as read','success');loadData()}}
+async function submitBill(){const tot=parseFloat($('m-btot').value),ins=parseFloat($('m-binsamt')?.value||0);const r=await api('POST','/billing',{patientId:1,providerId:1,description:$('m-bdesc').value,totalAmount:tot,insuranceCovered:ins,patientOwes:Math.max(0,tot-ins)});if(r.ok){toast('Bill added','success');closeModal();loadData()}else toast('Failed','error')}
+async function payBill(id){const r=await api('PUT',`/billing/${id}/pay`,{});if(r.ok){toast('Bill marked paid','success');loadData()}else toast('Failed','error')}
+
+function setPage(p){S.page=p;S.q='';S.qi='';S.fStatus='all';S.fType='all';S.tab=0;render()}
+
+function render(){
+  const root=$('root');
+  if(S.screen==='login'||S.screen==='register'){
+    const isL=S.authMode==='login';
+    root.innerHTML=`<div class="auth-wrap"><div class="auth-form-side"><div class="auth-form-inner">
+      <div class="auth-brand"><div class="auth-brand-mark">🧬</div><div class="auth-brand-name">Guardian <span>Genetics</span></div></div>
+      ${isL?`<div class="auth-heading">Sign in to your account</div><div class="auth-subheading">Access your personalized health portal</div><div id="l-err" class="auth-alert error"></div>
+        <form onsubmit="doLogin(event)"><div class="ff"><label class="fl">Email</label><input class="fc" id="l-email" type="email" value="admin@guardiangenetics.com"></div><div class="ff"><label class="fl">Password</label><input class="fc" id="l-pass" type="password" value="Admin123!"></div>
+        <div style="margin-bottom:20px"><div class="fl" style="margin-bottom:8px">I am a</div><div class="role-tabs">${['Admin','Provider','Patient'].map(r=>`<div class="role-tab ${S.selectedRole===r?'active':''}" onclick="S.selectedRole='${r}';render()"><span class="role-tab-icon">${r==='Admin'?'⚙️':r==='Provider'?'🩺':'👤'}</span>${r}</div>`).join('')}</div></div>
+        <button type="submit" class="btn-auth">Sign in →</button></form><div class="auth-switch">New here? <a onclick="S.authMode='register';render()">Create an account</a></div>`
+      :`<div class="auth-heading">Create your account</div><div class="auth-subheading">Join Guardian Genetics</div><div id="r-err" class="auth-alert error"></div><div id="r-ok" class="auth-alert success"></div>
+        <form onsubmit="doRegister(event)"><div class="ff"><label class="fl">Email</label><input class="fc" id="r-email" type="email" placeholder="you@example.com"></div><div class="ff"><label class="fl">Password</label><input class="fc" id="r-pass" type="password" placeholder="Create a strong password"></div>
+        <div style="margin-bottom:20px"><div class="fl" style="margin-bottom:8px">I am a</div><div class="role-tabs">${['Admin','Provider','Patient'].map(r=>`<div class="role-tab ${S.selectedRole===r?'active':''}" onclick="S.selectedRole='${r}';render()"><span class="role-tab-icon">${r==='Admin'?'⚙️':r==='Provider'?'🩺':'👤'}</span>${r}</div>`).join('')}</div></div>
+        <button type="submit" class="btn-auth">Create account →</button></form><div class="auth-switch">Have an account? <a onclick="S.authMode='login';render()">Sign in</a></div>`}
+    </div></div>
+    <div class="auth-panel"><div class="auth-panel-badge">🔒 HIPAA-Ready Platform</div><div class="auth-panel-title">Precision genetics.<br><em>Human care.</em></div><div class="auth-panel-desc">A secure, cloud-native platform connecting patients with genetic counselors for personalized health insights.</div>
+    <div class="auth-features"><div class="auth-feature"><div class="auth-feature-icon">🧬</div><div class="auth-feature-text">Advanced genetic testing and risk assessment</div></div><div class="auth-feature"><div class="auth-feature-icon">📅</div><div class="auth-feature-text">Seamless appointment scheduling</div></div><div class="auth-feature"><div class="auth-feature-icon">💬</div><div class="auth-feature-text">Secure messaging with your care team</div></div><div class="auth-feature"><div class="auth-feature-icon">📊</div><div class="auth-feature-text">Real-time results dashboard</div></div></div>
+    <div class="auth-stats-row"><div><div class="auth-stat-num">26</div><div class="auth-stat-lbl">API endpoints</div></div><div><div class="auth-stat-num">13</div><div class="auth-stat-lbl">Data tables</div></div><div><div class="auth-stat-num">100%</div><div class="auth-stat-lbl">Cloud native</div></div></div></div></div>`;
+    return;
+  }
+  const nav=getNav();
+  const uL=(S.user?.email||'U')[0].toUpperCase();
+  const pages={dashboard:pageDashboard,'my-providers':pageMyProviders,patients:pagePatients,providers:pageProviders,appointments:pageAppointments,testresults:pageTestResults,messages:pageMessages,billing:pageBilling};
+  root.innerHTML=`<div class="app-layout">
+    <nav class="sidebar"><div class="sidebar-header"><div class="sidebar-logo-mark">🧬</div><div class="sidebar-logo-text">Guardian <span>Genetics</span></div></div>
+    <div class="sidebar-body"><div class="nav-section-label">${isAdmin()?'Admin Portal':isProvider()?'Provider Portal':'Patient Portal'}</div>
+    ${nav.map(n=>`<div class="nav-item ${S.page===n.id?'active':''}" onclick="setPage('${n.id}')"><span class="nav-icon">${n.icon}</span>${n.label}${n.id==='messages'&&S.unread>0?`<span class="nav-badge">${S.unread}</span>`:''}</div>`).join('')}</div>
+    <div class="sidebar-footer"><div class="user-card"><div class="user-avatar">${uL}</div><div class="user-info"><div class="user-name">${S.user?.email||'User'}</div><div class="user-role">${S.selectedRole||'Admin'}</div></div><span class="user-logout" onclick="logout()" title="Sign out">⏻</span></div></div></nav>
+    <div class="main-content"><div class="topbar"><div class="topbar-title">${TITLES[S.page]||'Dashboard'}</div><div class="topbar-actions"><div class="tb-btn" onclick="loadData()" style="font-size:18px" title="Refresh">↻</div><div class="tb-btn" onclick="setPage('messages')" title="Messages">💬${S.unread>0?'<span class="notif-dot"></span>':''}</div><div class="tb-div"></div><div class="tb-av" title="${S.user?.email}">${uL}</div></div></div>
+    <div class="page-content">${(pages[S.page]||pageDashboard)()}</div></div></div>`;
+}
+render();
+</script></body></html>
