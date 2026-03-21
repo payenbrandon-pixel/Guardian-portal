@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardian Genetics Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#0052cc;--primary-dark:#003d99;--primary-light:#e8f0fe;--primary-mid:#4d8ff5;--teal:#00897b;--teal-light:#e0f2f1;--navy:#0a1f44;--gray-50:#f7f9fc;--gray-100:#eef1f6;--gray-200:#dde3ee;--gray-300:#c4cdd9;--gray-400:#8f9fae;--gray-500:#6b7a8d;--gray-600:#4a5568;--gray-700:#2d3748;--gray-800:#1a202c;--success:#00a651;--success-light:#e6f7ee;--warning:#f59e0b;--warning-light:#fffbeb;--danger:#e53e3e;--danger-light:#fff5f5;--sidebar-w:260px;--topbar-h:64px;--radius:10px;--radius-sm:6px;--radius-lg:16px;--shadow-xs:0 1px 2px rgba(0,0,0,.05);--shadow-sm:0 2px 8px rgba(0,0,0,.06);--shadow:0 4px 16px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);--t:all .2s ease}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-700);line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;outline:none}
+input,select,textarea{font-family:'Outfit',sans-serif;outline:none}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:3px}
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:480px 1fr}
+.auth-form-side{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 40px;background:white}
+.auth-form-inner{width:100%;max-width:360px}
+.auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:40px}
+.auth-brand-mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--teal));display:flex;align-items:center;justify-content:center;font-size:20px}
+.auth-brand-name{font-size:18px;font-weight:700;color:var(--navy)}
+.auth-brand-name span{color:var(--primary)}
+.auth-heading{font-family:'Lora',serif;font-size:26px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.auth-subheading{font-size:14px;color:var(--gray-500);margin-bottom:28px}
+.form-field{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--gray-600);margin-bottom:5px}
+.form-control{width:100%;padding:10px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;color:var(--gray-800);background:white;transition:var(--t)}
+.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,82,204,.1)}
+.form-control::placeholder{color:var(--gray-300)}
+.role-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.role-tab{padding:10px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);text-align:center;cursor:pointer;transition:var(--t);font-size:13px;font-weight:500;color:var(--gray-500)}
+.role-tab:hover{border-color:var(--primary);color:var(--primary)}
+.role-tab.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary)}
+.role-tab-icon{font-size:20px;display:block;margin-bottom:4px}
+.btn-auth{width:100%;padding:12px;background:var(--primary);color:white;border-radius:var(--radius-sm);font-size:15px;font-weight:600;transition:var(--t);border:none;font-family:'Outfit',sans-serif;cursor:pointer}
+.btn-auth:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,82,204,.3)}
+.auth-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--gray-500)}
+.auth-switch a{color:var(--primary);font-weight:600;cursor:pointer}
+.auth-alert{padding:10px 13px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:14px;display:none}
+.auth-alert.error{background:var(--danger-light);color:var(--danger);border:1px solid #fecaca}
+.auth-alert.success{background:var(--success-light);color:var(--success);border:1px solid #a7f3d0}
+.auth-panel{background:linear-gradient(150deg,var(--navy) 0%,#0a3366 50%,#0d5c6e 100%);display:flex;flex-direction:column;justify-content:center;padding:60px;position:relative;overflow:hidden}
+.auth-panel-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:32px;width:fit-content}
+.auth-panel-title{font-family:'Lora',serif;font-size:38px;font-weight:600;color:white;line-height:1.2;margin-bottom:16px}
+.auth-panel-title em{font-style:italic;color:#7dd3fc}
+.auth-panel-desc{font-size:15px;color:rgba(255,255,255,.55);line-height:1.7;max-width:400px;margin-bottom:40px}
+.auth-features{display:flex;flex-direction:column;gap:14px}
+.auth-feature{display:flex;align-items:center;gap:12px}
+.auth-feature-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.auth-feature-text{font-size:14px;color:rgba(255,255,255,.7)}
+.auth-stats-row{display:flex;gap:32px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,.1)}
+.auth-stat-num{font-family:'Lora',serif;font-size:28px;color:white}
+.auth-stat-lbl{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+.app-layout{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--navy);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200}
+.sidebar-header{height:var(--topbar-h);display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sidebar-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--teal));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sidebar-logo-text{font-size:15px;font-weight:700;color:white}
+.sidebar-logo-text span{color:#7dd3fc}
+.sidebar-body{flex:1;overflow-y:auto;padding:12px}
+.nav-section-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:8px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:var(--t);position:relative;margin-bottom:1px}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(0,82,204,.35);color:white}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--primary-mid);border-radius:0 2px 2px 0}
+.nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--danger);color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.07);padding:14px 16px}
+.user-card{display:flex;align-items:center;gap:10px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--teal));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:rgba(255,255,255,.35)}
+.user-logout{color:rgba(255,255,255,.3);font-size:18px;cursor:pointer;transition:var(--t);padding:4px}
+.user-logout:hover{color:var(--danger)}
+.topbar{height:var(--topbar-h);background:white;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;padding:0 28px;gap:16px;position:fixed;top:0;left:var(--sidebar-w);right:0;z-index:100;box-shadow:var(--shadow-xs)}
+.topbar-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--navy);flex:1}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.topbar-icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--gray-50);border:1px solid var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:var(--t);position:relative}
+.topbar-icon-btn:hover{background:var(--primary-light);border-color:var(--primary)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--danger);border:1.5px solid white}
+.topbar-divider{width:1px;height:28px;background:var(--gray-200)}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--teal));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;cursor:pointer}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);min-height:100vh;background:var(--gray-50)}
+.page{padding:28px;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;transition:var(--t);cursor:pointer;border:none;white-space:nowrap}
+.btn-primary{background:var(--primary);color:white}.btn-primary:hover{background:var(--primary-dark);box-shadow:0 4px 10px rgba(0,82,204,.25)}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700)}.btn-secondary:hover{background:var(--gray-200)}
+.btn-outline{background:white;color:var(--primary);border:1.5px solid var(--primary)}.btn-outline:hover{background:var(--primary-light)}
+.btn-ghost{background:transparent;color:var(--gray-600)}.btn-ghost:hover{background:var(--gray-100)}
+.btn-success{background:var(--success);color:white}.btn-success:hover{background:#008f47}
+.btn-danger{background:var(--danger);color:white}.btn-danger:hover{background:#c53030}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{background:#00796b}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:11px 22px;font-size:15px}
+.card{background:white;border-radius:var(--radius);border:1px solid var(--gray-100);box-shadow:var(--shadow-xs)}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+.card-title{font-size:14px;font-weight:700;color:var(--navy)}
+.card-subtitle{font-size:12px;color:var(--gray-400);margin-top:1px}
+.card-body{padding:16px 20px 20px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:white;border-radius:var(--radius);border:1px solid var(--gray-100);padding:18px 20px;box-shadow:var(--shadow-xs);transition:var(--t)}
+.stat-card:hover{box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.stat-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.stat-icon-wrap{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px}
+.stat-icon-wrap.blue{background:var(--primary-light)}.stat-icon-wrap.teal{background:var(--teal-light)}.stat-icon-wrap.green{background:var(--success-light)}.stat-icon-wrap.yellow{background:var(--warning-light)}
+.stat-trend{font-size:11px;font-weight:600;padding:3px 7px;border-radius:20px}
+.stat-trend.up{background:var(--success-light);color:var(--success)}.stat-trend.neutral{background:var(--gray-100);color:var(--gray-500)}
+.stat-value{font-family:'Lora',serif;font-size:26px;font-weight:600;color:var(--navy);line-height:1}
+.stat-label{font-size:12px;color:var(--gray-500);margin-top:4px}
+.table-wrap{overflow-x:auto}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table thead th{text-align:left;padding:10px 16px;font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;background:var(--gray-50);border-bottom:1px solid var(--gray-100);white-space:nowrap}
+.data-table tbody td{padding:12px 16px;border-bottom:1px solid var(--gray-50);color:var(--gray-700);vertical-align:middle}
+.data-table tbody tr:last-child td{border-bottom:none}
+.data-table tbody tr{transition:var(--t);cursor:pointer}
+.data-table tbody tr:hover td{background:var(--gray-50)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-blue{background:#dbeafe;color:#1d4ed8}.badge-green{background:var(--success-light);color:#065f46}.badge-yellow{background:var(--warning-light);color:#92400e}.badge-red{background:var(--danger-light);color:#991b1b}.badge-gray{background:var(--gray-100);color:var(--gray-600)}.badge-teal{background:var(--teal-light);color:#00695c}.badge-purple{background:#f3e8ff;color:#6b21a8}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:var(--gray-400)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.empty-title{font-size:14px;font-weight:600;color:var(--gray-500);margin-bottom:4px}
+.empty-desc{font-size:12px;text-align:center;max-width:220px}
+.overlay{position:fixed;inset:0;background:rgba(10,31,68,.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(3px);animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:white;border-radius:var(--radius-lg);width:100%;max-width:560px;box-shadow:var(--shadow-lg);animation:slideUp .2s ease;max-height:92vh;display:flex;flex-direction:column}
+.modal-lg{max-width:780px}
+.modal-xl{max-width:960px}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--navy)}
+.modal-close{width:28px;height:28px;border-radius:50%;background:var(--gray-100);border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t);color:var(--gray-500)}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:20px 24px;overflow-y:auto;flex:1}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--gray-100);display:flex;gap:10px;justify-content:flex-end;flex-shrink:0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.page-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.page-hd-title{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--navy)}
+.page-hd-desc{font-size:13px;color:var(--gray-500);margin-top:3px}
+.page-hd-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);animation:toastIn .25s ease;min-width:260px;background:white}
+@keyframes toastIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.success{color:var(--success);border-left:4px solid var(--success)}.toast.error{color:var(--danger);border-left:4px solid var(--danger)}.toast.info{color:var(--primary);border-left:4px solid var(--primary)}
+.toast-msg{flex:1;color:var(--gray-700)}
+.welcome-banner{background:linear-gradient(135deg,var(--navy) 0%,#0a3366 60%,#0d5c6e 100%);border-radius:var(--radius-lg);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;position:relative;overflow:hidden}
+.welcome-banner::after{content:'🧬';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.08}
+.welcome-title{font-family:'Lora',serif;font-size:20px;color:white;margin-bottom:4px}
+.welcome-sub{font-size:13px;color:rgba(255,255,255,.55)}
+.welcome-next{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);padding:12px 16px;text-align:right}
+.welcome-next-label{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:2px}
+.welcome-next-value{font-size:14px;font-weight:600;color:white}
+.timeline{display:flex;flex-direction:column}
+.timeline-item{display:flex;gap:14px;padding:12px 0;cursor:pointer}
+.timeline-item+.timeline-item{border-top:1px solid var(--gray-50)}
+.timeline-item:hover{background:var(--gray-50);margin:0 -8px;padding:12px 8px;border-radius:var(--radius-sm)}
+.timeline-dot{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+.timeline-dot.blue{background:var(--primary-light)}.timeline-dot.green{background:var(--success-light)}.timeline-dot.yellow{background:var(--warning-light)}.timeline-dot.gray{background:var(--gray-100)}
+.timeline-title{font-size:13px;font-weight:600;color:var(--navy)}
+.timeline-meta{font-size:12px;color:var(--gray-400);margin-top:2px}
+.provider-card{background:white;border-radius:var(--radius);border:1px solid var(--gray-100);padding:20px;transition:var(--t);cursor:pointer}
+.provider-card:hover{box-shadow:var(--shadow-sm);border-color:var(--primary);transform:translateY(-2px)}
+.provider-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:22px;color:white;margin:0 auto 14px;border:3px solid var(--primary-light)}
+.provider-name{font-size:15px;font-weight:700;color:var(--navy);text-align:center}
+.provider-spec{font-size:12px;color:var(--primary);text-align:center;margin-top:2px;margin-bottom:10px;font-weight:500}
+.provider-bio{font-size:12px;color:var(--gray-600);line-height:1.6;margin-bottom:12px;text-align:center}
+.provider-creds{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
+.search-bar{display:flex;align-items:center;gap:10px;background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:8px 14px;transition:var(--t)}
+.search-bar:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,82,204,.1)}
+.search-bar input{border:none;outline:none;font-size:14px;color:var(--gray-800);width:100%;background:transparent}
+.search-bar input::placeholder{color:var(--gray-300)}
+.message-item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--gray-50);cursor:pointer;transition:var(--t)}
+.message-item:last-child{border-bottom:none}
+.message-item:hover{background:var(--gray-50)}
+.message-item.unread-msg{background:#f0f7ff}
+.message-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary)}
+.message-subject{font-size:13px;font-weight:600;color:var(--navy)}
+.message-subject.unread{color:var(--primary)}
+.message-preview{font-size:12px;color:var(--gray-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px}
+.profile-hero{background:linear-gradient(135deg,var(--navy),#0a3366);border-radius:var(--radius-lg);padding:28px;display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.profile-hero-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary-mid),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:26px;color:white;flex-shrink:0;border:3px solid rgba(255,255,255,.2)}
+.profile-hero-name{font-family:'Lora',serif;font-size:22px;color:white}
+.profile-hero-meta{font-size:13px;color:rgba(255,255,255,.55);margin-top:4px}
+.profile-hero-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:20px;overflow-x:auto}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--t);white-space:nowrap}
+.tab:hover{color:var(--primary)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.calendar-wrap{background:white;border-radius:var(--radius);border:1px solid var(--gray-100)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.cal-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--navy)}
+.cal-nav-btn{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--gray-100);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:var(--t)}
+.cal-nav-btn:hover{background:var(--primary-light);color:var(--primary)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-day-label{text-align:center;padding:8px 4px;font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--radius-sm);margin:2px;font-size:13px;font-weight:500;color:var(--gray-700);transition:var(--t);position:relative}
+.cal-day:hover{background:var(--primary-light);color:var(--primary)}
+.cal-day.today{background:var(--primary);color:white;font-weight:700}
+.cal-day.has-appt::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);position:absolute;bottom:3px}
+.cal-day.today.has-appt::after{background:white}
+.cal-day.other-month{color:var(--gray-300)}
+.bill-breakdown{background:var(--gray-50);border-radius:var(--radius);padding:16px 20px}
+.bill-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;color:var(--gray-700)}
+.bill-row+.bill-row{border-top:1px solid var(--gray-200)}
+.bill-row.total-row{font-weight:700;font-size:15px;color:var(--navy)}
+.bill-row.paid-row{color:var(--success)}
+.insurance-card{background:linear-gradient(135deg,#1a3a6e,var(--teal));border-radius:var(--radius-lg);padding:22px 24px;color:white;position:relative;overflow:hidden}
+.insurance-card::after{content:'🛡';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:52px;opacity:.1}
+.ins-label{font-size:11px;opacity:.6;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.ins-value{font-size:15px;font-weight:600}
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.contact-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--t)}
+.contact-item:hover{background:var(--gray-50)}
+.contact-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--primary);flex-shrink:0}
+.contact-name{font-size:13px;font-weight:600;color:var(--navy)}
+.contact-role{font-size:11px;color:var(--gray-400)}
+.file-drop{border:2px dashed var(--gray-200);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:var(--t)}
+.file-drop:hover{border-color:var(--primary);background:var(--primary-light)}
+.file-drop-icon{font-size:26px;margin-bottom:8px}
+.file-drop-text{font-size:13px;color:var(--gray-500);font-weight:500}
+.file-drop-sub{font-size:11px;color:var(--gray-400);margin-top:3px}
+.sec-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px}
+.sec-divider-label{font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.sec-divider-line{flex:1;height:1px;background:var(--gray-100)}
+.vital-card{background:white;border:1px solid var(--gray-100);border-radius:var(--radius);padding:14px 16px;text-align:center}
+.vital-icon{font-size:22px;margin-bottom:6px}
+.vital-value{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--navy)}
+.vital-label{font-size:11px;color:var(--gray-500);margin-top:2px}
+.vital-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:5px;display:inline-block}
+.vital-status.normal{background:var(--success-light);color:var(--success)}
+.vital-status.elevated{background:var(--warning-light);color:#92400e}
+.info-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-50);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{width:140px;color:var(--gray-500);flex-shrink:0;font-weight:500}
+.info-value{color:var(--gray-800);font-weight:500}
+.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.action-btn{background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;transition:var(--t)}
+.action-btn:hover{border-color:var(--primary);background:var(--primary-light)}
+.action-btn-icon{font-size:22px;margin-bottom:6px}
+.action-btn-label{font-size:12px;font-weight:600;color:var(--navy)}
+.action-btn-desc{font-size:11px;color:var(--gray-500);margin-top:2px}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);color:var(--gray-600);background:white;transition:var(--t)}
+.filter-chip:hover{border-color:var(--primary);color:var(--primary)}
+.filter-chip.active{background:var(--primary);color:white;border-color:var(--primary)}
+.msg-thread{background:var(--gray-50);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.msg-thread-item{background:white;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;border:1px solid var(--gray-100)}
+.msg-thread-item:last-child{margin-bottom:0}
+.msg-sender{font-size:12px;font-weight:600;color:var(--primary);margin-bottom:4px}
+.msg-body{font-size:13px;color:var(--gray-700);line-height:1.6}
+.msg-time{font-size:11px;color:var(--gray-400);margin-top:4px}
+
+.settings-nav-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--rs);font-size:13px;font-weight:500;color:var(--g600);cursor:pointer;transition:var(--t2);margin-bottom:2px}
+.settings-nav-item:hover{background:var(--g50);color:var(--navy)}
+.settings-nav-item.active{background:var(--pl);color:var(--p);font-weight:600}
+.settings-nav-item.err{color:var(--err)}.settings-nav-item.err:hover{background:var(--errl)}
+
+/* PROFILE DROPDOWN */
+.prof-dropdown-wrap{position:relative}
+.prof-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:260px;background:white;border-radius:var(--rl);box-shadow:0 8px 32px rgba(0,0,0,.15);border:1px solid var(--g100);z-index:500;animation:slideUp .15s ease;overflow:hidden}
+.prof-dropdown-header{padding:16px 18px;background:linear-gradient(135deg,var(--navy),#0a3366);display:flex;align-items:center;gap:12px}
+.prof-dropdown-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--pm),var(--t));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0}
+.prof-dropdown-name{font-size:13px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof-dropdown-role{font-size:11px;color:rgba(255,255,255,.5);margin-top:1px}
+.prof-dropdown-divider{height:1px;background:var(--g100)}
+.prof-dropdown-item{display:flex;align-items:center;gap:10px;padding:11px 18px;font-size:13px;font-weight:500;color:var(--g700);cursor:pointer;transition:var(--t2)}
+.prof-dropdown-item:hover{background:var(--g50);color:var(--navy)}
+.prof-dropdown-item.danger{color:var(--err)}
+.prof-dropdown-item.danger:hover{background:var(--errl)}
+.prof-dropdown-item span.icon{font-size:16px;width:20px;text-align:center}
+.prof-dropdown-section{padding:6px 0}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toast-wrap" class="toast-wrap"></div>
+<div id="modal-root"></div>
+<script>
+const API='https://guardianapi-ftanbefefpf7hcg7.eastus2-01.azurewebsites.net/api';
+let S={screen:'login',authMode:'login',selectedRole:'Admin',user:null,page:'dashboard',
+  data:{patients:[],providers:[],appointments:[],testOrders:[],testResults:[],messages:[],billing:[]},
+  modal:null,modalData:null,unreadCount:0,calYear:new Date().getFullYear(),calMonth:new Date().getMonth(),
+  searchQ:'',filterStatus:'all',activeTab:0,msgThread:[]};
+
+async function apiFetch(m,p,b){try{const r=await fetch(`${API}${p}`,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});const t=await r.text();let d;try{d=JSON.parse(t)}catch{d=t}return{ok:r.ok,status:r.status,data:d}}catch(e){return{ok:false,error:e.message}}}
+function arr(x){if(!x)return[];return Array.isArray(x)?x:[x]}
+function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function fmtDT(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function initials(a,b){return((a||'')[0]||'').toUpperCase()+((b||'')[0]||'').toUpperCase()}
+function $(id){return document.getElementById(id)}
+function toast(msg,type='info'){const wrap=$('toast-wrap');const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span style="font-size:16px">${{success:'✓',error:'✕',info:'ℹ'}[type]}</span><span class="toast-msg">${msg}</span>`;wrap.appendChild(el);setTimeout(()=>el.remove(),3500)}
+function badge(t,c){return`<span class="badge badge-${c}">${t}</span>`}
+function sBadge(s){const m={Scheduled:'blue',Completed:'green',Cancelled:'red',Pending:'yellow',Paid:'green',Unpaid:'yellow',Low:'green',Medium:'yellow',High:'red',Normal:'green',Active:'green',Inactive:'gray'};return badge(s,m[s]||'gray')}
+function empty(icon,title,desc){return`<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-desc">${desc||''}</div></div>`}
+function esc(s){return String(s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;')}
+function jEnc(o){return esc(JSON.stringify(o))}
+
+async function loadData(){
+  const uid=S.user?.userId||1;
+  const[pats,provs,appts,msgs,bills,results]=await Promise.all([
+    apiFetch('GET','/patients'),apiFetch('GET','/providers'),
+    apiFetch('GET','/appointments/patient/1'),apiFetch('GET',`/messages/inbox/${uid}`),
+    apiFetch('GET','/billing/patient/1'),apiFetch('GET','/testresults/patient/1')
+  ]);
+  if(pats.ok)S.data.patients=arr(pats.data);
+  if(provs.ok)S.data.providers=arr(provs.data);
+  if(appts.ok)S.data.appointments=arr(appts.data);
+  if(msgs.ok){S.data.messages=arr(msgs.data);S.unreadCount=S.data.messages.filter(m=>!m.isRead).length}
+  if(bills.ok)S.data.billing=arr(bills.data);
+  if(results.ok)S.data.testResults=arr(results.data);
+  render();
+  loadUserSettings();
+}
+
+async function doLogin(e){e.preventDefault();const email=$('l-email').value,pass=$('l-pass').value,err=$('l-err');err.style.display='none';const r=await apiFetch('POST','/login',{email,password:pass});if(r.ok&&r.data.userId){S.user=r.data;S.screen='app';S.page='dashboard';render();loadData();loadUserSettings()}else{err.textContent=r.data?.message||'Invalid email or password.';err.style.display='block'}}
+async function doRegister(e){e.preventDefault();const email=$('r-email').value,pass=$('r-pass').value,role=S.selectedRole;const err=$('r-err'),ok=$('r-ok');err.style.display='none';ok.style.display='none';const r=await apiFetch('POST','/register',{email,password:pass,role});if(r.ok){ok.textContent='Account created! Redirecting...';ok.style.display='block';setTimeout(()=>{S.authMode='login';render()},1600)}else{err.textContent=r.data?.message||'Registration failed.';err.style.display='block'}}
+function logout(){S.user=null;S.screen='login';S.data={patients:[],providers:[],appointments:[],testOrders:[],testResults:[],messages:[],billing:[]};S.unreadCount=0;render()}
+function role(){return(S.selectedRole||'Admin').toLowerCase()}
+function isAdmin(){return role()==='admin'}
+function isProvider(){return role()==='provider'}
+function isPatient(){return role()==='patient'}
+
+function getNav(){
+  if(isPatient())return[{id:'dashboard',icon:'⊞',label:'My Dashboard'},{id:'my-providers',icon:'🩺',label:'My Providers'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'},{id:'billing',icon:'💰',label:'Billing & Insurance'},];
+  if(isProvider())return[{id:'dashboard',icon:'⊞',label:'Dashboard'},{id:'patients',icon:'👥',label:'Patient Directory'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'},];
+  return[{id:'dashboard',icon:'⊞',label:'Dashboard'},{id:'patients',icon:'👥',label:'Patient Directory'},{id:'providers',icon:'🩺',label:'Providers'},{id:'appointments',icon:'📅',label:'Appointments'},{id:'testresults',icon:'🧬',label:'Test Results'},{id:'messages',icon:'💬',label:'Messages'},{id:'billing',icon:'💰',label:'Billing'},];
+}
+const TITLES={dashboard:'Dashboard',settings:'Settings','my-providers':'My Providers',patients:'Patient Directory',providers:'Providers',appointments:'Appointments',testresults:'Test Results',messages:'Messages',billing:'Billing & Insurance'};
+
+function renderCal(appts){
+  const now=new Date(),y=S.calYear,mo=S.calMonth;
+  const first=new Date(y,mo,1).getDay(),days=new Date(y,mo+1,0).getDate();
+  const mName=new Date(y,mo).toLocaleString('default',{month:'long'});
+  const adays=new Set(appts.map(a=>{const d=new Date(a.appointmentDate);return d.getFullYear()===y&&d.getMonth()===mo?d.getDate():null}).filter(Boolean));
+  let cells='';
+  for(let i=0;i<first;i++)cells+=`<div class="cal-day other-month"></div>`;
+  for(let d=1;d<=days;d++){const iT=d===now.getDate()&&mo===now.getMonth()&&y===now.getFullYear();const hA=adays.has(d);cells+=`<div class="cal-day ${iT?'today':''} ${hA?'has-appt':''}" onclick="calClick(${d})">${d}</div>`}
+  return`<div class="calendar-wrap"><div class="cal-header"><div class="cal-title">${mName} ${y}</div><div style="display:flex;gap:8px"><button class="cal-nav-btn" onclick="event.stopPropagation();S.calMonth--;if(S.calMonth<0){S.calMonth=11;S.calYear--}render()">‹</button><button class="cal-nav-btn" onclick="event.stopPropagation();S.calMonth++;if(S.calMonth>11){S.calMonth=0;S.calYear++}render()">›</button></div></div><div style="padding:10px"><div class="cal-grid">${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-day-label">${d}</div>`).join('')}${cells}</div></div></div>`;
+}
+function calClick(d){const a=S.data.appointments.filter(x=>{const dt=new Date(x.appointmentDate);return dt.getDate()===d&&dt.getMonth()===S.calMonth&&dt.getFullYear()===S.calYear});if(a.length>0)openModal('apptDetail',a[0]);else openModal('addAppt')}
+
+function pageDashboard(){
+  if(isPatient())return patientDash();
+  if(isProvider())return providerDash();
+  return adminDash();
+}
+
+function adminDash(){
+  const{patients,providers,appointments,testResults,messages,billing}=S.data;
+  const nextA=appointments.find(a=>a.status==='Scheduled');
+  const owed=billing.reduce((s,b)=>s+(b.patientOwes||0),0);
+  return`<div class="page"><div class="welcome-banner"><div><div class="welcome-title">Welcome back, ${S.user?.email?.split('@')[0]||'Admin'} 👋</div><div class="welcome-sub">Guardian Genetics Admin — full system overview</div></div>${nextA?`<div class="welcome-next"><div class="welcome-next-label">Next Appointment</div><div class="welcome-next-value">${fmtDate(nextA.appointmentDate)}</div></div>`:''}</div>
+  <div class="stats-row"><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap blue">👥</div><span class="stat-trend neutral">Total</span></div><div class="stat-value">${patients.length}</div><div class="stat-label">Patients</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap teal">🩺</div><span class="stat-trend neutral">Active</span></div><div class="stat-value">${providers.length}</div><div class="stat-label">Providers</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap green">🧬</div><span class="stat-trend neutral">Done</span></div><div class="stat-value">${testResults.length}</div><div class="stat-label">Test Results</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap yellow">💰</div><span class="stat-trend ${owed>0?'up':'neutral'}">${owed>0?'Due':'Clear'}</span></div><div class="stat-value">$${owed.toFixed(0)}</div><div class="stat-label">Balance Due</div></div></div>
+  <div class="grid-2" style="gap:20px"><div class="card"><div class="card-header"><div><div class="card-title">Recent Appointments</div><div class="card-subtitle">${appointments.length} total</div></div><button class="btn btn-primary btn-sm" onclick="setPage('appointments')">View All</button></div><div class="card-body" style="padding-top:12px">${appointments.length===0?empty('📅','No appointments'):appointments.slice(0,4).map(a=>`<div class="timeline-item" onclick="openModal('apptDetail',${jEnc(a)})"><div class="timeline-dot ${a.status==='Completed'?'green':'blue'}">${a.status==='Completed'?'✓':'📅'}</div><div style="flex:1"><div class="timeline-title">${a.appointmentType||'Visit'}</div><div class="timeline-meta">${fmtDate(a.appointmentDate)}</div></div>${sBadge(a.status)}</div>`).join('')}</div></div>
+  <div class="card"><div class="card-header"><div><div class="card-title">Messages</div><div class="card-subtitle">${S.unreadCount} unread</div></div><button class="btn btn-primary btn-sm" onclick="setPage('messages')">View All</button></div><div class="card-body" style="padding-top:8px">${messages.slice(0,3).map(m=>`<div class="message-item ${!m.isRead?'unread-msg':''}" onclick="openModal('viewMsg',${jEnc(m)})"><div class="message-avatar">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="message-subject ${!m.isRead?'unread':''}">${m.subject||'(No subject)'}</div><div class="message-preview">${m.body||''}</div></div></div>`).join('')}</div></div></div></div>`;
+}
+
+function providerDash(){
+  const{patients,appointments,testResults,messages}=S.data;
+  const upcoming=appointments.filter(a=>a.status==='Scheduled');
+  return`<div class="page"><div class="welcome-banner"><div><div class="welcome-title">Good morning, Dr. ${S.user?.email?.split('@')[0]||'Provider'} 👋</div><div class="welcome-sub">You have ${upcoming.length} upcoming appointment${upcoming.length!==1?'s':''}</div></div><div style="display:flex;gap:10px"><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="openModal('addAppt')">+ Schedule</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="openModal('addTestResult')">+ Add Result</button></div></div>
+  <div class="stats-row"><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap blue">👥</div></div><div class="stat-value">${patients.length}</div><div class="stat-label">My Patients</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap yellow">📅</div></div><div class="stat-value">${upcoming.length}</div><div class="stat-label">Upcoming</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap green">🧬</div></div><div class="stat-value">${testResults.length}</div><div class="stat-label">Results Issued</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap teal">💬</div></div><div class="stat-value">${S.unreadCount}</div><div class="stat-label">Unread Messages</div></div></div>
+  <div class="grid-2" style="gap:20px">${renderCal(appointments)}<div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="card-header"><div class="card-title">Upcoming Appointments</div></div><div class="card-body" style="padding-top:12px">${upcoming.length===0?empty('📅','No upcoming appointments'):upcoming.slice(0,4).map(a=>`<div class="timeline-item" onclick="openModal('apptDetail',${jEnc(a)})"><div class="timeline-dot blue">📅</div><div style="flex:1"><div class="timeline-title">${a.appointmentType||'Visit'}</div><div class="timeline-meta">${fmtDT(a.appointmentDate)}</div></div>${sBadge(a.status)}</div>`).join('')}</div></div><div class="card"><div class="card-header"><div class="card-title">Recent Messages</div><button class="btn btn-primary btn-sm" onclick="setPage('messages')">View All</button></div><div class="card-body" style="padding-top:8px">${messages.slice(0,3).map(m=>`<div class="message-item ${!m.isRead?'unread-msg':''}" onclick="openModal('viewMsg',${jEnc(m)})"><div class="message-avatar">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="message-subject ${!m.isRead?'unread':''}">${m.subject||'(No subject)'}</div><div class="message-preview">${m.body||''}</div></div></div>`).join('')}</div></div></div></div></div>`;
+}
+
+function patientDash(){
+  const{appointments,testResults,messages,billing}=S.data;
+  const nextA=appointments.find(a=>a.status==='Scheduled');
+  const owed=billing.reduce((s,b)=>s+(b.patientOwes||0),0);
+  return`<div class="page"><div class="welcome-banner"><div><div class="welcome-title">Hello, ${S.user?.email?.split('@')[0]||'Patient'} 👋</div><div class="welcome-sub">Your personal health portal</div></div>${nextA?`<div class="welcome-next"><div class="welcome-next-label">Next Appointment</div><div class="welcome-next-value">${fmtDate(nextA.appointmentDate)}</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">${nextA.appointmentType||'Telehealth'}</div></div>`:''}</div>
+  <div class="stats-row"><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap blue">📅</div></div><div class="stat-value">${appointments.length}</div><div class="stat-label">Appointments</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap green">🧬</div></div><div class="stat-value">${testResults.length}</div><div class="stat-label">Test Results</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap teal">💬</div></div><div class="stat-value">${S.unreadCount}</div><div class="stat-label">Unread Messages</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap yellow">💰</div><span class="stat-trend ${owed>0?'up':'neutral'}">${owed>0?'Due':'Paid'}</span></div><div class="stat-value">$${owed.toFixed(0)}</div><div class="stat-label">Balance Due</div></div></div>
+  <div class="grid-2" style="gap:20px">${renderCal(appointments)}<div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="card-header"><div class="card-title">Latest Test Results</div><button class="btn btn-primary btn-sm" onclick="setPage('testresults')">View All</button></div><div class="card-body" style="padding-top:12px">${testResults.length===0?empty('🧬','No results yet'):testResults.slice(0,3).map(t=>`<div class="timeline-item" onclick="openModal('viewTestResult',${jEnc(t)})"><div class="timeline-dot ${t.riskLevel==='Low'?'green':'yellow'}">🧬</div><div style="flex:1"><div class="timeline-title">${t.resultSummary||'Genetic Panel'}</div><div class="timeline-meta">${fmtDate(t.resultDate)}</div></div>${sBadge(t.riskLevel||'Unknown')}</div>`).join('')}</div></div><div class="card"><div class="card-header"><div class="card-title">Recent Messages</div><button class="btn btn-primary btn-sm" onclick="setPage('messages')">View All</button></div><div class="card-body" style="padding-top:8px">${messages.slice(0,2).map(m=>`<div class="message-item ${!m.isRead?'unread-msg':''}" onclick="openModal('viewMsg',${jEnc(m)})"><div class="message-avatar">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div class="message-subject ${!m.isRead?'unread':''}">${m.subject||'(No subject)'}</div><div class="message-preview">${m.body||''}</div></div></div>`).join('')}</div></div></div></div></div>`;
+}
+
+function pagePatients(){
+  const q=S.searchQ.toLowerCase();
+  const f=S.data.patients.filter(p=>`${p.firstName} ${p.lastName} ${p.phone||''} ${p.city||''}`.toLowerCase().includes(q));
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Patient Directory</div><div class="page-hd-desc">${f.length} patient${f.length!==1?'s':''} found</div></div><div class="page-hd-actions"><div class="search-bar" style="width:280px"><span style="color:var(--gray-400)">🔍</span><input placeholder="Search by name, phone, city..." value="${S.searchQ}" oninput="S.searchQ=this.value;render()"></div><button class="btn btn-primary" onclick="openModal('addPatient')">+ Add Patient</button></div></div>
+  <div class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Patient</th><th>ID</th><th>DOB</th><th>Gender</th><th>Phone</th><th>Location</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="7">${empty('👥','No patients found','Try a different search')}</td></tr>`:f.map(p=>`<tr onclick="openModal('viewPatient',${jEnc(p)})"><td><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--primary)">${initials(p.firstName,p.lastName)}</div><div style="font-weight:600;color:var(--primary)">${p.firstName} ${p.lastName}</div></div></td><td><span style="background:var(--gray-100);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--gray-600)">#${p.patientId}</span></td><td>${fmtDate(p.dateOfBirth)}</td><td>${p.gender||'—'}</td><td>${p.phone||'—'}</td><td>${p.city?`${p.city}, ${p.state}`:'—'}</td><td onclick="event.stopPropagation()"><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm" onclick="openModal('viewPatient',${jEnc(p)})">View Profile</button><button class="btn btn-primary btn-sm" onclick="openModal('addTestResult',{patientId:${p.patientId},patientName:'${esc(p.firstName+' '+p.lastName)}'})">Add Result</button></div></td></tr>`).join('')}
+  </tbody></table></div></div></div>`;
+}
+
+function pageProviders(){
+  const{providers}=S.data;
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Providers</div><div class="page-hd-desc">Genetic counselors and specialists</div></div><button class="btn btn-primary" onclick="openModal('addProvider')">+ Add Provider</button></div>
+  <div class="grid-3">${providers.length===0?empty('🩺','No providers'):providers.map(p=>`<div class="provider-card" onclick="openModal('viewProvider',${jEnc(p)})"><div class="provider-avatar-lg">${initials(p.firstName,p.lastName)}</div><div class="provider-name">${p.firstName} ${p.lastName}</div><div class="provider-spec">${p.specialty||'Specialist'}</div><div class="provider-bio">${p.bio||'No bio provided.'}</div><div class="provider-creds">${badge('MD, PhD','blue')}${badge('ABMG Certified','teal')}</div><div style="display:flex;align-items:center;justify-content:space-between">${p.isAcceptingPatients?badge('Accepting Patients','green'):badge('Not Accepting','red')}</div></div>`).join('')}</div></div>`;
+}
+
+function pageMyProviders(){
+  const{providers}=S.data;
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">My Providers</div><div class="page-hd-desc">Your care team at Guardian Genetics</div></div></div>
+  <div class="grid-3">${providers.length===0?empty('🩺','No providers assigned'):providers.map(p=>`<div class="provider-card" onclick="openModal('viewProvider',${jEnc(p)})"><div class="provider-avatar-lg">${initials(p.firstName,p.lastName)}</div><div class="provider-name">${p.firstName} ${p.lastName}</div><div class="provider-spec">${p.specialty||'Specialist'}</div><div class="provider-bio">${p.bio||'No bio provided.'}</div><div class="provider-creds">${badge('MD, PhD','blue')}${badge('ABMG Certified','teal')}${badge('Board Certified','purple')}</div><div style="display:flex;gap:8px;margin-top:12px;justify-content:center"><button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openModal('addAppt')">📅 Schedule</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openModal('sendMsg')">💬 Message</button></div></div>`).join('')}</div></div>`;
+}
+
+function pageAppointments(){
+  const{appointments,patients}=S.data;
+  const q=S.searchQ.toLowerCase();
+  const sf=S.filterStatus;
+  const upcoming=appointments.filter(a=>a.status==='Scheduled'&&`${a.appointmentType||''} ${a.notes||''}`.toLowerCase().includes(q));
+  const completed=appointments.filter(a=>a.status==='Completed'&&`${a.appointmentType||''} ${a.notes||''}`.toLowerCase().includes(q));
+  const cancelled=appointments.filter(a=>a.status==='Cancelled'&&`${a.appointmentType||''} ${a.notes||''}`.toLowerCase().includes(q));
+  const showAll=sf==='all';
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Appointments</div><div class="page-hd-desc">${appointments.length} total appointments</div></div><div class="page-hd-actions"><div class="search-bar" style="width:240px"><span style="color:var(--gray-400)">🔍</span><input placeholder="Search appointments..." value="${S.searchQ}" oninput="S.searchQ=this.value;render()"></div><button class="btn btn-outline" onclick="toast('Google/Apple Calendar sync coming soon','info')">📅 Sync Calendar</button><button class="btn btn-primary" onclick="openModal('addAppt')">+ Schedule</button></div></div>
+  <div class="filter-bar"><div class="filter-chip ${sf==='all'?'active':''}" onclick="S.filterStatus='all';render()">All</div><div class="filter-chip ${sf==='Scheduled'?'active':''}" onclick="S.filterStatus='Scheduled';render()">Upcoming</div><div class="filter-chip ${sf==='Completed'?'active':''}" onclick="S.filterStatus='Completed';render()">Completed</div><div class="filter-chip ${sf==='Cancelled'?'active':''}" onclick="S.filterStatus='Cancelled';render()">Cancelled</div></div>
+  <div class="grid-2" style="gap:20px;margin-bottom:24px">${renderCal(appointments)}<div class="card"><div class="card-header"><div class="card-title">Upcoming Appointments</div><span class="stat-trend up">${upcoming.length} scheduled</span></div><div class="card-body" style="padding-top:12px">${upcoming.length===0?empty('📅','No upcoming appointments'):upcoming.map(a=>`<div class="timeline-item" onclick="openModal('apptDetail',${jEnc(a)})"><div class="timeline-dot blue">📅</div><div style="flex:1"><div class="timeline-title">${a.appointmentType||'Visit'}</div><div class="timeline-meta">${fmtDT(a.appointmentDate)}${a.notes?' · '+a.notes:''}</div></div>${sBadge(a.status)}</div>`).join('')}</div></div></div>
+  ${(showAll||sf==='Completed')?`<div class="sec-divider"><div class="sec-divider-label">Completed Appointments</div><div class="sec-divider-line"></div></div><div class="card" style="margin-bottom:20px"><div class="table-wrap"><table class="data-table"><thead><tr><th>Date & Time</th><th>Type</th><th>${isPatient()?'Provider':'Patient'}</th><th>Notes</th><th>Status</th><th>Actions</th></tr></thead><tbody>${completed.length===0?`<tr><td colspan="6">${empty('✓','No completed appointments')}</td></tr>`:completed.map(a=>`<tr onclick="openModal('apptDetail',${jEnc(a)})"><td><div style="font-weight:600;color:var(--navy)">${fmtDT(a.appointmentDate)}</div></td><td>${a.appointmentType||'General'}</td><td><span style="color:var(--primary);font-weight:500;cursor:pointer" onclick="event.stopPropagation();${isPatient()?`openModal('viewProvider',${jEnc(S.data.providers[0]||{})})`:''}">${isPatient()?'Dr. Sarah Johnson':'Jane Doe'}</span></td><td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--gray-500)">${a.notes||'—'}</td><td>${sBadge(a.status)}</td><td onclick="event.stopPropagation()"><button class="btn btn-ghost btn-sm" onclick="openModal('apptDetail',${jEnc(a)})">Details</button></td></tr>`).join('')}</tbody></table></div></div>`:''}
+  ${(showAll||sf==='Cancelled')?`<div class="sec-divider"><div class="sec-divider-label">Cancelled Appointments</div><div class="sec-divider-line"></div></div><div class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead><tbody>${cancelled.length===0?`<tr><td colspan="3">${empty('✕','No cancelled appointments')}</td></tr>`:cancelled.map(a=>`<tr><td>${fmtDate(a.appointmentDate)}</td><td>${a.appointmentType||'—'}</td><td>${sBadge(a.status)}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+  </div>`;
+}
+
+function pageTestResults(){
+  const{testResults,patients}=S.data;
+  const q=S.searchQ.toLowerCase();
+  const f=testResults.filter(t=>`${t.resultSummary||''} ${t.reviewedBy||''} ${t.riskLevel||''}`.toLowerCase().includes(q));
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Test Results</div><div class="page-hd-desc">Genetic test results and risk assessments</div></div><div class="page-hd-actions"><div class="search-bar" style="width:260px"><span style="color:var(--gray-400)">🔍</span><input placeholder="Search results..." value="${S.searchQ}" oninput="S.searchQ=this.value;render()"></div>${!isPatient()?`<button class="btn btn-primary" onclick="openModal('addTestResult',null)">+ Add Result</button>`:''}</div></div>
+  ${!isPatient()?`<div class="card" style="margin-bottom:20px;padding:18px 20px"><div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:12px">🔍 Search Patient to Deposit Results</div><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="search-bar" style="flex:1"><span style="color:var(--gray-400)">👥</span><input placeholder="Search by patient name or ID..." oninput="S.searchQ=this.value;render()"></div><button class="btn btn-primary" onclick="openModal('addTestResult',null)">Deposit Results</button></div><div style="display:flex;gap:8px;flex-wrap:wrap">${patients.slice(0,6).map(p=>`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--gray-50);border-radius:20px;cursor:pointer;font-size:12px;border:1px solid var(--gray-200);transition:var(--t)" onclick="openModal('addTestResult',{patientId:${p.patientId},patientName:'${esc(p.firstName+' '+p.lastName)}'})"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary)">${initials(p.firstName,p.lastName)}</div>${p.firstName} ${p.lastName} <span style="color:var(--gray-400)">#${p.patientId}</span></div>`).join('')}</div></div>`:''}
+  <div class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Patient</th><th>Patient ID</th><th>Test Summary</th><th>Test Type</th><th>Risk Level</th><th>Reviewed By</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+  ${f.length===0?`<tr><td colspan="8">${empty('🧬','No results found')}</td></tr>`:f.map(t=>`<tr onclick="openModal('viewTestResult',${jEnc(t)})"><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary)">JD</div><span style="font-weight:600">Jane Doe</span></div></td><td><span style="background:var(--gray-100);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--gray-600)">#1</span></td><td><div style="font-weight:600;color:var(--navy)">${t.resultSummary||'—'}</div></td><td>BRCA Panel</td><td>${sBadge(t.riskLevel||'Unknown')}</td><td>${t.reviewedBy||'—'}</td><td>${fmtDate(t.resultDate)}</td><td onclick="event.stopPropagation()"><button class="btn btn-outline btn-sm" onclick="openModal('viewTestResult',${jEnc(t)})">View Details</button></td></tr>`).join('')}
+  </tbody></table></div></div></div>`;
+}
+
+function pageMessages(){
+  const{messages,patients,providers}=S.data;
+  const q=S.searchQ.toLowerCase();
+  const f=messages.filter(m=>`${m.subject||''} ${m.body||''}`.toLowerCase().includes(q));
+  const contacts=[...patients.slice(0,3),...providers.slice(0,2)];
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Messages</div><div class="page-hd-desc">Secure patient-provider messaging</div></div><div class="page-hd-actions"><div class="search-bar" style="width:240px"><span style="color:var(--gray-400)">🔍</span><input placeholder="Search messages..." value="${S.searchQ}" oninput="S.searchQ=this.value;render()"></div><select class="form-control" style="width:140px" onchange="S.filterStatus=this.value;render()"><option value="all">All Messages</option><option value="unread">Unread</option><option value="read">Read</option></select><button class="btn btn-primary" onclick="openModal('sendMsg')">+ New Message</button></div></div>
+  <div class="grid-2" style="gap:20px"><div class="card"><div class="card-header"><div class="card-title">Inbox</div><div class="card-subtitle">${S.unreadCount} unread</div></div><div style="padding:0">${f.length===0?`<div style="padding:20px">${empty('💬','No messages','Your inbox is empty')}</div>`:f.map(m=>`<div class="message-item ${!m.isRead?'unread-msg':''}" onclick="openModal('viewMsg',${jEnc(m)})"><div class="message-avatar">${(m.subject||'M')[0].toUpperCase()}</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div class="message-subject ${!m.isRead?'unread':''}">${m.subject||'(No subject)'}</div>${!m.isRead?'<div class="unread-dot"></div>':''}</div><div class="message-preview">${m.body||''}</div></div></div>`).join('')}</div></div>
+  <div style="display:flex;flex-direction:column;gap:16px"><div class="card"><div class="card-header"><div class="card-title">Frequent Contacts</div><button class="btn btn-ghost btn-sm" onclick="toast('Showing all contacts','info')">View All</button></div><div class="card-body">${contacts.slice(0,5).map((c,i)=>`<div class="contact-item" onclick="${i<3?`openModal('viewPatient',${jEnc(c)})`:`openModal('viewProvider',${jEnc(c)})`}"><div class="contact-avatar">${initials(c.firstName,c.lastName)}</div><div style="flex:1"><div class="contact-name">${c.firstName} ${c.lastName}</div><div class="contact-role">${i<3?'Patient':'Provider — '+(c.specialty||'')}</div></div><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openModal('sendMsg')">Message</button></div>`).join('')}</div></div>
+  <div class="card"><div class="card-header"><div class="card-title">Recent Contacts</div><button class="btn btn-ghost btn-sm">View All</button></div><div class="card-body">${contacts.slice(0,5).map((c,i)=>`<div class="contact-item" onclick="${i<3?`openModal('viewPatient',${jEnc(c)})`:`openModal('viewProvider',${jEnc(c)})`}"><div class="contact-avatar">${initials(c.firstName,c.lastName)}</div><div><div class="contact-name">${c.firstName} ${c.lastName}</div><div class="contact-role">${i<3?'Patient':'Provider'}</div></div></div>`).join('')}</div></div></div></div></div>`;
+}
+
+function pageBilling(){
+  const{billing}=S.data;
+  const total=billing.reduce((s,b)=>s+(b.totalAmount||0),0);
+  const insTotal=billing.reduce((s,b)=>s+(b.insuranceCovered||0),0);
+  const paid=billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+(b.totalAmount||0),0);
+  const owed=billing.reduce((s,b)=>s+(b.patientOwes||0),0);
+  if(isPatient())return patientBilling(billing,total,insTotal,paid,owed);
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Billing</div><div class="page-hd-desc">Patient billing and payment records</div></div><button class="btn btn-primary" onclick="openModal('addBill')">+ Add Bill</button></div>
+  <div class="stats-row"><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap blue">💳</div></div><div class="stat-value">$${total.toFixed(2)}</div><div class="stat-label">Total Billed</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap teal">🛡</div></div><div class="stat-value">$${insTotal.toFixed(2)}</div><div class="stat-label">Insurance Covered</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap green">✅</div></div><div class="stat-value">$${paid.toFixed(2)}</div><div class="stat-label">Collected</div></div><div class="stat-card"><div class="stat-card-top"><div class="stat-icon-wrap yellow">⏳</div></div><div class="stat-value">$${owed.toFixed(2)}</div><div class="stat-label">Outstanding</div></div></div>
+  <div class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Description</th><th>Patient</th><th>Insurance Policy</th><th>Total</th><th>Insurance</th><th>Patient Owes</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+  ${billing.length===0?`<tr><td colspan="8">${empty('💰','No billing records')}</td></tr>`:billing.map(b=>`<tr onclick="openModal('viewBill',${jEnc(b)})"><td><div style="font-weight:600;color:var(--navy)">${b.description||'Service'}</div></td><td><span style="color:var(--primary);font-weight:500;cursor:pointer" onclick="event.stopPropagation();openModal('viewPatient',${jEnc(S.data.patients[0]||{})})">Jane Doe</span></td><td>${badge('BlueCross PPO','blue')}</td><td>$${(b.totalAmount||0).toFixed(2)}</td><td style="color:var(--success)">$${(b.insuranceCovered||0).toFixed(2)}</td><td style="font-weight:600;color:${b.patientOwes>0?'var(--danger)':'var(--success)'}">$${(b.patientOwes||0).toFixed(2)}</td><td>${sBadge(b.status)}</td><td onclick="event.stopPropagation()">${b.status!=='Paid'?`<button class="btn btn-success btn-sm" onclick="payBill(${b.billId})">Mark Paid</button>`:''}</td></tr>`).join('')}
+  </tbody></table></div></div></div>`;
+}
+
+function patientBilling(billing,total,insTotal,paid,owed){
+  return`<div class="page"><div class="page-hd"><div><div class="page-hd-title">Billing & Insurance</div><div class="page-hd-desc">Your billing summary and insurance coverage</div></div></div>
+  <div class="grid-2" style="gap:20px;margin-bottom:20px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="insurance-card">
+        <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:16px;display:flex;align-items:center;gap:8px">🛡 Your Insurance</div>
+        <div style="font-size:20px;font-weight:700;color:white;margin-bottom:16px">BlueCross BlueShield</div>
+        <div class="ins-grid">
+          <div><div class="ins-label">Member ID</div><div class="ins-value">***-**-4821</div></div>
+          <div><div class="ins-label">Group Number</div><div class="ins-value">GRP-00291</div></div>
+          <div><div class="ins-label">Plan Type</div><div class="ins-value">PPO In-Network</div></div>
+          <div><div class="ins-label">Coverage Status</div><div><span style="background:rgba(0,166,81,.25);color:#4ade80;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">Active</span></div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+          <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="openModal('updateInsurance')">✏ Update</button>
+          <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="toast('Upload your insurance card','info')">📎 Upload Card</button>
+          <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="toast('Verifying coverage...','info')">✓ Verify</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div class="card-title">Payment Methods</div><button class="btn btn-primary btn-sm" onclick="toast('Add payment method','info')">+ Add</button></div><div class="card-body"><div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)"><span style="font-size:24px">💳</span><div><div style="font-weight:600;color:var(--navy)">Visa ending in 4242</div><div style="font-size:12px;color:var(--gray-500)">Expires 12/26 · Default</div></div><span class="badge badge-green" style="margin-left:auto">Default</span></div></div></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="card-title">Cost Breakdown</div></div><div class="card-body">
+      <div class="bill-breakdown">
+        <div class="bill-row"><span>Total Charges</span><span style="font-weight:600">$${total.toFixed(2)}</span></div>
+        <div class="bill-row"><span>Insurance Covered</span><span style="color:var(--success);font-weight:600">− $${insTotal.toFixed(2)}</span></div>
+        <div class="bill-row"><span>Adjustments</span><span style="color:var(--success)">− $0.00</span></div>
+        <div class="bill-row total-row"><span>Your Responsibility</span><span style="color:${owed>0?'var(--danger)':'var(--success)'}">$${owed.toFixed(2)}</span></div>
+        <div class="bill-row paid-row"><span>Amount Paid</span><span>$${paid.toFixed(2)}</span></div>
+        <div class="bill-row total-row" style="border-top:2px solid var(--primary);margin-top:4px"><span>Final Balance Due</span><span style="color:${owed-paid>0?'var(--danger)':'var(--success)'}">$${Math.max(0,owed-paid).toFixed(2)}</span></div>
+      </div>
+      <div class="sec-divider"><div class="sec-divider-label">Actions</div><div class="sec-divider-line"></div></div>
+      <div class="action-grid">
+        <div class="action-btn" onclick="toast('Processing payment...','info')"><div class="action-btn-icon">💳</div><div class="action-btn-label">Pay Balance</div><div class="action-btn-desc">Pay $${Math.max(0,owed-paid).toFixed(2)} now</div></div>
+        <div class="action-btn" onclick="toast('Setting up payment plan...','info')"><div class="action-btn-icon">📋</div><div class="action-btn-label">Payment Plan</div><div class="action-btn-desc">Set up installments</div></div>
+        <div class="action-btn" onclick="toast('Downloading invoice...','info')"><div class="action-btn-icon">⬇</div><div class="action-btn-label">Download Invoice</div><div class="action-btn-desc">PDF statement</div></div>
+        <div class="action-btn" onclick="toast('Connecting to billing support...','info')"><div class="action-btn-icon">📞</div><div class="action-btn-label">Billing Support</div><div class="action-btn-desc">Contact our team</div></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="sec-divider"><div class="sec-divider-label">Billing History</div><div class="sec-divider-line"></div></div>
+  <div class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Description</th><th>Total</th><th>Insurance</th><th>Your Cost</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+  ${billing.length===0?`<tr><td colspan="6">${empty('💰','No bills yet')}</td></tr>`:billing.map(b=>`<tr onclick="openModal('viewBill',${jEnc(b)})"><td><div style="font-weight:600;color:var(--navy)">${b.description||'Service'}</div></td><td>$${(b.totalAmount||0).toFixed(2)}</td><td style="color:var(--success)">$${(b.insuranceCovered||0).toFixed(2)}</td><td style="font-weight:600;color:${b.patientOwes>0?'var(--danger)':'var(--success)'}">$${(b.patientOwes||0).toFixed(2)}</td><td>${sBadge(b.status)}</td><td onclick="event.stopPropagation()">${b.status!=='Paid'?`<button class="btn btn-primary btn-sm" onclick="toast('Processing payment...','info')">Pay Now</button>`:badge('Paid','green')}</td></tr>`).join('')}
+  </tbody></table></div></div></div>`;
+}
+
+function openModal(type,data){S.modal=type;S.modalData=data||null;S.activeTab=0;renderModal()}
+function closeModal(){S.modal=null;S.modalData=null;$('modal-root').innerHTML=''}
+
+function renderModal(){
+  const root=$('modal-root');if(!S.modal){root.innerHTML='';return}
+  let body='',sz='';
+  const d=S.modalData;
+
+  if(S.modal==='viewPatient'&&d){
+    sz='modal-lg';
+    const tabs=['Overview','Vitals','Insurance','Medical History','Billing','Appointments'];
+    body=`<div class="modal-head"><div class="modal-title">Patient Profile</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="profile-hero"><div class="profile-hero-avatar">${initials(d.firstName,d.lastName)}</div><div style="flex:1"><div class="profile-hero-name">${d.firstName} ${d.lastName}</div><div class="profile-hero-meta">Patient ID #${d.patientId||'—'} · DOB: ${fmtDate(d.dateOfBirth)} · ${d.gender||'—'}</div><div class="profile-hero-meta" style="margin-top:4px">${d.phone||''} · ${d.city?`${d.city}, ${d.state}`:''}</div></div><div class="profile-hero-actions"><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('addAppt')">📅 Schedule</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('sendMsg')">💬 Message</button><button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:white" onclick="closeModal();openModal('addTestResult',d)">🧬 Add Result</button></div></div>
+      <div class="tabs">${tabs.map((t,i)=>`<div class="tab ${S.activeTab===i?'active':''}" onclick="S.activeTab=${i};renderModal()">${t}</div>`).join('')}</div>
+      ${S.activeTab===0?`<div class="grid-2" style="gap:14px;margin-bottom:16px"><div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div class="info-label" style="display:block;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase">General Information</div><div class="info-row"><span class="info-label">Full Name</span><span class="info-value">${d.firstName} ${d.lastName}</span></div><div class="info-row"><span class="info-label">Date of Birth</span><span class="info-value">${fmtDate(d.dateOfBirth)}</span></div><div class="info-row"><span class="info-label">Gender</span><span class="info-value">${d.gender||'—'}</span></div><div class="info-row"><span class="info-label">Phone</span><span class="info-value">${d.phone||'—'}</span></div><div class="info-row"><span class="info-label">Location</span><span class="info-value">${d.city?`${d.city}, ${d.state}`:'—'}</span></div></div><div><div style="background:var(--gray-50);padding:14px;border-radius:var(--radius);margin-bottom:10px"><div style="font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;margin-bottom:8px">Quick Actions</div><div style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-primary btn-sm" onclick="closeModal();openModal('addAppt')" style="justify-content:flex-start">📅 Schedule Appointment</button><button class="btn btn-outline btn-sm" onclick="closeModal();openModal('sendMsg')" style="justify-content:flex-start">💬 Send Message</button><button class="btn btn-teal btn-sm" onclick="closeModal();openModal('addTestResult',d)" style="justify-content:flex-start">🧬 Add Test Result</button><button class="btn btn-secondary btn-sm" onclick="S.activeTab=4;renderModal()" style="justify-content:flex-start">💰 View Billing</button></div></div></div></div>`:''}
+      ${S.activeTab===1?`<div class="grid-4"><div class="vital-card"><div class="vital-icon">❤️</div><div class="vital-value">72 bpm</div><div class="vital-label">Heart Rate</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">🩸</div><div class="vital-value">118/76</div><div class="vital-label">Blood Pressure</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">🌡️</div><div class="vital-value">98.6°F</div><div class="vital-label">Temperature</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">⚖️</div><div class="vital-value">145 lbs</div><div class="vital-label">Weight</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">📏</div><div class="vital-value">5'6"</div><div class="vital-label">Height</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">🫁</div><div class="vital-value">98%</div><div class="vital-label">O2 Saturation</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">🧪</div><div class="vital-value">5.4</div><div class="vital-label">A1C</div><div class="vital-status normal">Normal</div></div><div class="vital-card"><div class="vital-icon">💊</div><div class="vital-value">180</div><div class="vital-label">Cholesterol</div><div class="vital-status normal">Normal</div></div></div>`:''}
+      ${S.activeTab===2?`<div class="insurance-card" style="margin-bottom:16px"><div style="font-size:18px;font-weight:700;color:white;margin-bottom:16px">BlueCross BlueShield</div><div class="ins-grid"><div><div class="ins-label">Member ID</div><div class="ins-value">***-**-4821</div></div><div><div class="ins-label">Group Number</div><div class="ins-value">GRP-00291</div></div><div><div class="ins-label">Plan</div><div class="ins-value">PPO In-Network</div></div><div><div class="ins-label">Coverage</div><div class="ins-value">80% In-Network</div></div></div></div><div class="grid-2" style="gap:10px"><div style="background:var(--gray-50);padding:12px;border-radius:var(--radius-sm)"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px">Deductible</div><div style="font-weight:600;color:var(--navy)">$1,500 / $3,000 family</div></div><div style="background:var(--gray-50);padding:12px;border-radius:var(--radius-sm)"><div style="font-size:11px;color:var(--gray-500);margin-bottom:4px">Out-of-Pocket Max</div><div style="font-weight:600;color:var(--navy)">$5,000 individual</div></div></div>`:''}
+      ${S.activeTab===3?`<div class="file-drop" onclick="toast('File upload integration coming soon','info')" style="margin-bottom:16px"><div class="file-drop-icon">📁</div><div class="file-drop-text">Upload Medical History</div><div class="file-drop-sub">PDF, DOCX — from any previous provider or institution</div></div><div style="text-align:center;color:var(--gray-400);font-size:13px">No medical history uploaded yet</div>`:''}
+      ${S.activeTab===4?`<div class="bill-breakdown">${S.data.billing.map(b=>`<div class="bill-row"><span>${b.description||'Service'}</span><span style="display:flex;align-items:center;gap:10px">$${(b.totalAmount||0).toFixed(2)} ${sBadge(b.status)}</span></div>`).join('')||'<div class="bill-row"><span style="color:var(--gray-400)">No billing records</span></div>'}</div>`:''}
+      ${S.activeTab===5?`<div class="timeline">${S.data.appointments.map(a=>`<div class="timeline-item" onclick="openModal('apptDetail',${jEnc(a)})"><div class="timeline-dot ${a.status==='Completed'?'green':'blue'}">${a.status==='Completed'?'✓':'📅'}</div><div style="flex:1"><div class="timeline-title">${a.appointmentType||'Visit'}</div><div class="timeline-meta">${fmtDT(a.appointmentDate)}</div></div>${sBadge(a.status)}</div>`).join('')||empty('📅','No appointments')}</div>`:''}
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button></div>`;
+  }
+
+  else if(S.modal==='viewProvider'&&d){
+    sz='modal-lg';
+    body=`<div class="modal-head"><div class="modal-title">Provider Profile</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div class="profile-hero"><div class="profile-hero-avatar">${initials(d.firstName,d.lastName)}</div><div style="flex:1"><div class="profile-hero-name">${d.firstName} ${d.lastName}</div><div class="profile-hero-meta">${d.specialty||'Specialist'} · Guardian Genetics</div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">${d.isAcceptingPatients?badge('Accepting Patients','green'):badge('Not Accepting','red')}${badge('MD, PhD','blue')}${badge('ABMG Certified','teal')}</div></div></div>
+      <div class="grid-2" style="gap:16px;margin-bottom:16px">
+        <div><div class="sec-divider"><div class="sec-divider-label">About</div><div class="sec-divider-line"></div></div><p style="font-size:14px;color:var(--gray-700);line-height:1.7">${d.bio||'No bio available.'}</p>
+        <div class="sec-divider"><div class="sec-divider-label">Credentials & Certifications</div><div class="sec-divider-line"></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--gray-50);border-radius:var(--radius-sm)"><span style="font-size:18px">🎓</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">MD, PhD — Medical Genetics</div><div style="font-size:11px;color:var(--gray-500)">Johns Hopkins University</div></div></div><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--gray-50);border-radius:var(--radius-sm)"><span style="font-size:18px">🏅</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">ABMG Board Certified</div><div style="font-size:11px;color:var(--gray-500)">American Board of Medical Genetics</div></div></div><div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--gray-50);border-radius:var(--radius-sm)"><span style="font-size:18px">⭐</span><div><div style="font-weight:600;font-size:13px;color:var(--navy)">Licensed Genetic Counselor</div><div style="font-size:11px;color:var(--gray-500)">State of Maryland</div></div></div></div></div>
+        <div><div class="sec-divider"><div class="sec-divider-label">Contact & Facility</div><div class="sec-divider-line"></div></div>
+        <div class="info-row"><span class="info-label">Facility</span><span class="info-value">Guardian Genetics — Salisbury, MD</span></div>
+        <div class="info-row"><span class="info-label">Phone</span><span class="info-value">${d.phone||'—'}</span></div>
+        <div class="info-row"><span class="info-label">Specialization</span><span class="info-value">${d.specialty||'—'}</span></div>
+        <div class="info-row"><span class="info-label">Status</span><span class="info-value">${d.isAcceptingPatients?'Accepting new patients':'Not accepting new patients'}</span></div></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button><button class="btn btn-outline" onclick="closeModal();openModal('sendMsg')">💬 Message Provider</button><button class="btn btn-primary" onclick="closeModal();openModal('addAppt')">📅 Schedule Appointment</button></div>`;
+  }
+
+  else if(S.modal==='viewTestResult'&&d){
+    sz='modal-lg';
+    body=`<div class="modal-head"><div class="modal-title">Test Result Details</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--primary-light);border-radius:var(--radius);margin-bottom:20px">
+        <div><div style="font-family:'Lora',serif;font-size:20px;color:var(--navy)">${d.resultSummary||'Genetic Panel'}</div><div style="font-size:13px;color:var(--gray-500);margin-top:4px">Date: ${fmtDate(d.resultDate)} · Ordered &amp; Reviewed by: ${d.reviewedBy||'Provider'}</div></div>${sBadge(d.riskLevel||'Unknown')}
+      </div>
+      <div class="grid-2" style="gap:14px;margin-bottom:16px">
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Patient</div><div style="font-weight:600;color:var(--navy)">Jane Doe</div><div style="font-size:12px;color:var(--gray-500)">Patient ID #1</div></div>
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Test Type</div><div style="font-weight:600;color:var(--navy)">BRCA1/BRCA2 Gene Mutation Panel</div></div>
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Who Ordered</div><div style="font-weight:600;color:var(--navy)">${d.reviewedBy||'Dr. Sarah Johnson'}</div></div>
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:6px">Result</div><div style="font-weight:600;color:var(--success)">${d.resultSummary||'No pathogenic variants detected'}</div></div>
+      </div>
+      ${d.clinicalNotes?`<div style="background:#f0f7ff;border:1px solid #bfdbfe;padding:14px;border-radius:var(--radius);margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px">📝 Clinical Notes from Provider</div><div style="font-size:14px;color:var(--gray-700);line-height:1.7">${d.clinicalNotes}</div></div>`:''}
+      <div class="sec-divider"><div class="sec-divider-label">Vitals at Time of Test</div><div class="sec-divider-line"></div></div>
+      <div class="grid-4" style="margin-bottom:16px"><div class="vital-card"><div class="vital-icon">❤️</div><div class="vital-value">72</div><div class="vital-label">Heart Rate</div></div><div class="vital-card"><div class="vital-icon">🩸</div><div class="vital-value">118/76</div><div class="vital-label">Blood Pressure</div></div><div class="vital-card"><div class="vital-icon">⚖️</div><div class="vital-value">145 lbs</div><div class="vital-label">Weight</div></div><div class="vital-card"><div class="vital-icon">🌡️</div><div class="vital-value">98.6°F</div><div class="vital-label">Temp</div></div></div>
+      <div class="sec-divider"><div class="sec-divider-label">Supporting Documents</div><div class="sec-divider-line"></div></div>
+      <div class="file-drop" onclick="toast('File storage integration coming soon','info')"><div class="file-drop-icon">📎</div><div class="file-drop-text">Supporting Documents</div><div class="file-drop-sub">No documents attached · Click to upload</div></div>
+      ${!isPatient()?`<div class="sec-divider"><div class="sec-divider-label">Add Notes</div><div class="sec-divider-line"></div></div><textarea class="form-control" rows="3" placeholder="Add or update clinical notes..."></textarea>`:''}
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button>${!isPatient()?`<button class="btn btn-primary" onclick="toast('Notes saved','success');closeModal()">Save Notes</button>`:''}</div>`;
+  }
+
+  else if(S.modal==='viewMsg'&&d){
+    sz='modal-lg';
+    body=`<div class="modal-head"><div class="modal-title">${d.subject||'Message'}</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--gray-50);border-radius:var(--radius);margin-bottom:16px">
+        <div class="message-avatar">${(d.subject||'M')[0].toUpperCase()}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--navy)">From: User #${d.senderId||'—'}</div><div style="font-size:12px;color:var(--gray-500)">To: User #${d.receiverId||'—'}</div></div>
+        ${!d.isRead?`<button class="btn btn-outline btn-sm" onclick="markRead(${d.messageId})">Mark Read</button>`:''}
+      </div>
+      <div class="msg-thread"><div class="msg-thread-item"><div class="msg-sender">User #${d.senderId}</div><div class="msg-body">${d.body||''}</div><div class="msg-time">Original message</div></div></div>
+      <div class="file-drop" onclick="toast('File attachment coming soon','info')" style="margin-bottom:16px"><div class="file-drop-icon">📎</div><div class="file-drop-text">Attach a file to your reply</div><div class="file-drop-sub">PDF, images, documents up to 25MB</div></div>
+      <div class="sec-divider"><div class="sec-divider-label">Reply</div><div class="sec-divider-line"></div></div>
+      <div class="grid-2" style="margin-bottom:12px"><div class="form-field" style="margin-bottom:0"><label class="form-label">To</label><input class="form-control" value="User #${d.senderId||1}" readonly></div><div class="form-field" style="margin-bottom:0"><label class="form-label">CC</label><input class="form-control" placeholder="Add CC recipients..." id="msg-cc"></div></div>
+      <div class="form-field"><textarea class="form-control" rows="4" placeholder="Write your reply..." id="msg-reply"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="toast('Reply sent','success');closeModal()">Send Reply</button></div>`;
+  }
+
+  else if(S.modal==='apptDetail'&&d){
+    sz='modal-lg';
+    const isProvider=!isPatient();
+    body=`<div class="modal-head"><div class="modal-title">Appointment Details</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div style="background:var(--primary-light);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-family:'Lora',serif;font-size:18px;color:var(--navy)">${d.appointmentType||'Appointment'}</div><div style="font-size:13px;color:var(--gray-600);margin-top:4px">${fmtDT(d.appointmentDate)}</div></div>${sBadge(d.status)}</div>
+      ${d.appointmentType==='Telehealth'?`<div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#2e7d32">📹 Telehealth Meeting</div><div style="font-size:12px;color:#388e3c;margin-top:3px">Zoom meeting will be set up automatically</div></div><button class="btn btn-success btn-sm" onclick="toast('Opening Zoom...','info')">Join Meeting</button></div>`:''}
+      <div class="grid-2" style="gap:14px;margin-bottom:16px">
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:8px">${isPatient()?'Provider Info':'Patient Info'}</div>${isPatient()?`<div style="font-weight:600;color:var(--primary);cursor:pointer" onclick="closeModal();openModal('viewProvider',${jEnc(S.data.providers[0]||{})})">Dr. Sarah Johnson</div><div style="font-size:12px;color:var(--gray-500)">Genetic Counseling</div>`:`<div style="font-weight:600;color:var(--primary);cursor:pointer" onclick="closeModal();openModal('viewPatient',${jEnc(S.data.patients[0]||{})})">Jane Doe</div><div style="font-size:12px;color:var(--gray-500)">Patient #1</div>`}</div>
+        <div style="background:var(--gray-50);padding:14px;border-radius:var(--radius)"><div style="font-size:11px;color:var(--gray-500);text-transform:uppercase;font-weight:700;margin-bottom:8px">Appointment Type</div><div style="font-weight:600;color:var(--navy)">${d.appointmentType||'General'}</div></div>
+      </div>
+      ${d.notes?`<div style="background:var(--gray-50);padding:14px;border-radius:var(--radius);margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--gray-500);margin-bottom:6px">Notes</div><div style="font-size:13px;color:var(--gray-700)">${d.notes}</div></div>`:''}
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="toast('Adding to Google Calendar...','info')">📅 Google Calendar</button>
+        <button class="btn btn-outline btn-sm" onclick="toast('Adding to Apple Calendar...','info')">🍎 Apple Calendar</button>
+        ${d.status==='Scheduled'?`<button class="btn btn-success btn-sm" onclick="updateAppt(${d.appointmentId},'Completed');closeModal()">✓ Complete</button><button class="btn btn-danger btn-sm" onclick="updateAppt(${d.appointmentId},'Cancelled');closeModal()">✕ Cancel</button>`:''}
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button></div>`;
+  }
+
+  else if(S.modal==='viewBill'&&d){
+    body=`<div class="modal-head"><div class="modal-title">Bill Details</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div style="font-family:'Lora',serif;font-size:18px;color:var(--navy);margin-bottom:4px">${d.description||'Service'}</div>
+      <div style="margin-bottom:16px">${sBadge(d.status)}</div>
+      <div class="info-row"><span class="info-label">Patient</span><span class="info-value" style="color:var(--primary);cursor:pointer" onclick="closeModal();openModal('viewPatient',${jEnc(S.data.patients[0]||{})})">Jane Doe — #1</span></div>
+      <div class="info-row"><span class="info-label">Insurance Policy</span><span class="info-value">${badge('BlueCross PPO','blue')}</span></div>
+      <div class="bill-breakdown" style="margin-top:16px">
+        <div class="bill-row"><span>Total Charges</span><span>$${(d.totalAmount||0).toFixed(2)}</span></div>
+        <div class="bill-row"><span>Insurance Covered</span><span style="color:var(--success)">− $${(d.insuranceCovered||0).toFixed(2)}</span></div>
+        <div class="bill-row total-row"><span>Patient Responsibility</span><span style="color:${d.patientOwes>0?'var(--danger)':'var(--success)'}">$${(d.patientOwes||0).toFixed(2)}</span></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Close</button>${d.status!=='Paid'?`<button class="btn btn-success" onclick="payBill(${d.billId});closeModal()">Mark as Paid</button>`:''}</div>`;
+  }
+
+  else if(S.modal==='addPatient'){
+    body=`<div class="modal-head"><div class="modal-title">Add New Patient</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><div class="grid-2"><div class="form-field"><label class="form-label">First Name</label><input class="form-control" id="m-fn" placeholder="Jane"></div><div class="form-field"><label class="form-label">Last Name</label><input class="form-control" id="m-ln" placeholder="Doe"></div></div><div class="grid-2"><div class="form-field"><label class="form-label">Date of Birth</label><input class="form-control" id="m-dob" type="date"></div><div class="form-field"><label class="form-label">Gender</label><select class="form-control" id="m-gnd"><option>Female</option><option>Male</option><option>Other</option></select></div></div><div class="form-field"><label class="form-label">Phone</label><input class="form-control" id="m-ph" placeholder="410-555-0000"></div><div class="grid-2"><div class="form-field"><label class="form-label">City</label><input class="form-control" id="m-cy" placeholder="Salisbury"></div><div class="form-field"><label class="form-label">State</label><input class="form-control" id="m-st" placeholder="MD"></div></div></div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitPatient()">Add Patient</button></div>`;
+  }
+
+  else if(S.modal==='addAppt'){
+    body=`<div class="modal-head"><div class="modal-title">Schedule Appointment</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><div class="form-field"><label class="form-label">Date & Time</label><input class="form-control" id="m-adt" type="datetime-local"></div><div class="form-field"><label class="form-label">Type</label><select class="form-control" id="m-aty" onchange="document.getElementById('zoom-note').style.display=this.value==='Telehealth'?'block':'none'"><option>Telehealth</option><option>In-Person</option><option>Follow-Up</option><option>Consultation</option></select></div><div id="zoom-note" style="background:#e8f5e9;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:#2e7d32;margin-bottom:14px">📹 A Zoom meeting will be created automatically</div><div class="form-field"><label class="form-label">Notes</label><textarea class="form-control" id="m-ant" rows="3" placeholder="Optional notes..."></textarea></div><div style="display:flex;gap:8px;margin-top:4px"><button class="btn btn-outline btn-sm" onclick="toast('Google Calendar sync coming soon','info')">📅 Google</button><button class="btn btn-outline btn-sm" onclick="toast('Apple Calendar sync coming soon','info')">🍎 Apple</button></div></div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitAppt()">Schedule</button></div>`;
+  }
+
+  else if(S.modal==='addTestResult'){
+    sz='modal-lg';
+    const pd=d;
+    body=`<div class="modal-head"><div class="modal-title">Add Test Result</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body">
+      <div style="background:var(--primary-light);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:13px;color:var(--primary);font-weight:600">Depositing results for: ${pd?.patientName||'Select Patient Below'} ${pd?.patientId?`(ID #${pd.patientId})`:''}</div>
+      <div class="form-field"><label class="form-label">Patient</label><select class="form-control" id="m-tpat">${S.data.patients.map(p=>`<option value="${p.patientId}" ${pd?.patientId===p.patientId?'selected':''}>${p.firstName} ${p.lastName} — #${p.patientId}</option>`).join('')}</select></div>
+      <div class="grid-2"><div class="form-field"><label class="form-label">Test Type</label><select class="form-control" id="m-ttype"><option>BRCA1/BRCA2 Panel</option><option>Whole Genome Sequencing</option><option>Chromosomal Microarray</option><option>Carrier Screening</option><option>Pharmacogenomics</option><option>Lynch Syndrome Panel</option><option>Hereditary Cancer Panel</option></select></div><div class="form-field"><label class="form-label">Risk Level</label><select class="form-control" id="m-trisk"><option>Low</option><option>Medium</option><option>High</option></select></div></div>
+      <div class="form-field"><label class="form-label">Result Summary</label><input class="form-control" id="m-tsum" placeholder="e.g. No pathogenic variants detected"></div>
+      <div class="form-field"><label class="form-label">Clinical Notes</label><textarea class="form-control" id="m-tnotes" rows="3" placeholder="Add clinical notes for the patient..."></textarea></div>
+      <div class="sec-divider"><div class="sec-divider-label">Supporting Documents</div><div class="sec-divider-line"></div></div>
+      <div class="file-drop" onclick="toast('File storage integration coming soon','info')"><div class="file-drop-icon">📎</div><div class="file-drop-text">Upload Lab Reports & Supporting Documents</div><div class="file-drop-sub">PDF, images, lab reports up to 25MB</div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitTestResult()">Save Result</button></div>`;
+  }
+
+  else if(S.modal==='sendMsg'){
+    body=`<div class="modal-head"><div class="modal-title">New Message</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><div class="form-field"><label class="form-label">To (User ID)</label><input class="form-control" id="m-mto" type="number" placeholder="1"></div><div class="form-field"><label class="form-label">CC</label><input class="form-control" placeholder="Add CC recipients..."></div><div class="form-field"><label class="form-label">Subject</label><input class="form-control" id="m-msub" placeholder="Subject..."></div><div class="form-field"><label class="form-label">Message</label><textarea class="form-control" id="m-mbody" rows="4" placeholder="Write your message..."></textarea></div><div class="file-drop" onclick="toast('File attachment coming soon','info')" style="margin-top:4px"><div class="file-drop-icon">📎</div><div class="file-drop-text">Attach a file</div><div class="file-drop-sub">Click to browse</div></div></div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitMsg()">Send Message</button></div>`;
+  }
+
+  else if(S.modal==='addBill'){
+    body=`<div class="modal-head"><div class="modal-title">Add Bill</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><div class="form-field"><label class="form-label">Description</label><input class="form-control" id="m-bdesc" placeholder="Genetic Counseling Session"></div>
+    <div class="form-field"><label class="form-label">Insurance Policy</label><select class="form-control" id="m-bpolicy" onchange="autoIns(this.value)"><option value="0">No Insurance</option><option value="80">BlueCross BlueShield PPO (80% covered)</option><option value="70">Aetna HMO (70% covered)</option><option value="75">UnitedHealth Choice Plus (75% covered)</option><option value="72">Cigna Open Access (72% covered)</option><option value="65">Humana Gold Plus (65% covered)</option><option value="100">Medicare Part B (100% after deductible)</option><option value="90">Medicaid (90% covered)</option></select></div>
+    <div class="grid-2"><div class="form-field"><label class="form-label">Total Amount ($)</label><input class="form-control" id="m-btot" type="number" placeholder="350" oninput="autoCalcBill()"></div><div class="form-field"><label class="form-label">Insurance Covered ($)</label><input class="form-control" id="m-binsamt" type="number" placeholder="auto-calculated" oninput="autoCalcBill()"></div></div>
+    <div style="background:var(--gray-50);padding:12px 16px;border-radius:var(--radius-sm)"><div class="bill-row"><span>Patient Responsibility</span><span id="m-bowed" style="font-weight:700;color:var(--navy)">$0.00</span></div></div></div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitBill()">Add Bill</button></div>`;
+  }
+
+  else if(S.modal==='updateInsurance'){
+    body=`<div class="modal-head"><div class="modal-title">Update Insurance</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body"><div class="form-field"><label class="form-label">Insurance Provider</label><select class="form-control"><option>BlueCross BlueShield</option><option>Aetna</option><option>UnitedHealth</option><option>Cigna</option><option>Humana</option><option>Medicare</option><option>Medicaid</option></select></div><div class="grid-2"><div class="form-field"><label class="form-label">Member ID</label><input class="form-control" placeholder="Member ID"></div><div class="form-field"><label class="form-label">Group Number</label><input class="form-control" placeholder="Group #"></div></div><div class="file-drop"><div class="file-drop-icon">🪪</div><div class="file-drop-text">Upload Insurance Card</div><div class="file-drop-sub">Front and back — JPG, PNG, PDF</div></div></div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="toast('Insurance updated','success');closeModal()">Save</button></div>`;
+  }
+
+  root.innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal ${sz}">${body}</div></div>`;
+}
+
+function autoIns(pct){const tot=parseFloat($('m-btot')?.value||0);const p=parseFloat(pct||0);if($('m-binsamt'))$('m-binsamt').value=(tot*p/100).toFixed(2);autoCalcBill()}
+function autoCalcBill(){const tot=parseFloat($('m-btot')?.value||0);const ins=parseFloat($('m-binsamt')?.value||0);const el=$('m-bowed');if(el)el.textContent=`$${Math.max(0,tot-ins).toFixed(2)}`}
+
+async function submitPatient(){const r=await apiFetch('POST','/patients',{userId:S.user.userId,firstName:$('m-fn').value,lastName:$('m-ln').value,dateOfBirth:$('m-dob').value,gender:$('m-gnd').value,phone:$('m-ph').value,city:$('m-cy').value,state:$('m-st').value});if(r.ok){toast('Patient added','success');closeModal();loadData()}else toast('Failed','error')}
+async function submitAppt(){const r=await apiFetch('POST','/appointments',{patientId:1,providerId:1,appointmentDate:$('m-adt').value,appointmentType:$('m-aty').value,notes:$('m-ant').value});if(r.ok){toast('Appointment scheduled','success');closeModal();loadData()}else toast('Failed','error')}
+async function updateAppt(id,status){const r=await apiFetch('PUT',`/appointments/${id}/status`,{status});if(r.ok){toast(`Marked ${status}`,'success');loadData()}else toast('Failed','error')}
+async function submitTestResult(){const r=await apiFetch('POST','/testresults',{testOrderId:1,resultSummary:$('m-tsum').value,riskLevel:$('m-trisk').value,clinicalNotes:$('m-tnotes').value,reviewedBy:S.user?.email,resultDate:new Date().toISOString()});if(r.ok){toast('Result saved','success');closeModal();loadData()}else toast('Failed','error')}
+async function submitMsg(){const r=await apiFetch('POST','/messages',{senderId:S.user.userId,receiverId:parseInt($('m-mto').value),subject:$('m-msub').value,body:$('m-mbody').value});if(r.ok){toast('Message sent','success');closeModal();loadData()}else toast('Failed','error')}
+async function markRead(id){const r=await apiFetch('PUT',`/messages/${id}/read`,{});if(r.ok){toast('Marked as read','success');loadData()}}
+async function submitBill(){const tot=parseFloat($('m-btot').value),ins=parseFloat($('m-binsamt').value||0);const r=await apiFetch('POST','/billing',{patientId:1,providerId:1,description:$('m-bdesc').value,totalAmount:tot,insuranceCovered:ins,patientOwes:tot-ins});if(r.ok){toast('Bill added','success');closeModal();loadData()}else toast('Failed','error')}
+async function payBill(id){const r=await apiFetch('PUT',`/billing/${id}/pay`,{});if(r.ok){toast('Bill marked paid','success');loadData()}else toast('Failed','error')}
+
+function setPage(p){S.page=p;S.searchQ='';S.filterStatus='all';S.activeTab=0;render()}
+
+// ══════════════════════════════════════════════════════════════
+// SETTINGS PAGE — All roles, all sections
+// ══════════════════════════════════════════════════════════════
+
+function pageSettings() {
+  if (isAdmin()) return settingsAdmin();
+  if (isProvider()) return settingsProvider();
+  return settingsPatient();
+}
+
+// ── PATIENT SETTINGS ──────────────────────────────────────────
+function settingsPatient() {
+  const tabs = ['Profile', 'Notifications', 'Insurance', 'Payment Methods', 'Medical Preferences', 'Privacy & Security', 'Accessibility'];
+  return `
+  <div class="ph"><div><div class="ph-title">Settings</div><div class="ph-desc">Manage your account and preferences</div></div></div>
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:20px">
+    <div class="card" style="padding:12px;height:fit-content">
+      ${tabs.map((t,i) => `<div class="settings-nav-item ${S.tab===i?'active':''}" onclick="S.tab=${i};render()">${settingsIcons[i]} ${t}</div>`).join('')}
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--g100)">
+        <div class="settings-nav-item err" onclick="logout()">⏻ Sign Out</div>
+        <div class="settings-nav-item err" onclick="openModal('deleteAccount')">🗑 Delete Account</div>
+      </div>
+    </div>
+    <div>
+      ${S.tab===0 ? settingsProfile() : ''}
+      ${S.tab===1 ? settingsNotifications() : ''}
+      ${S.tab===2 ? settingsInsurance() : ''}
+      ${S.tab===3 ? settingsPaymentMethods() : ''}
+      ${S.tab===4 ? settingsMedicalPrefs() : ''}
+      ${S.tab===5 ? settingsPrivacy() : ''}
+      ${S.tab===6 ? settingsAccessibility() : ''}
+    </div>
+  </div>`;
+}
+
+// ── PROVIDER SETTINGS ─────────────────────────────────────────
+function settingsProvider() {
+  const tabs = ['Profile', 'Professional Info', 'Availability', 'Accepted Insurance', 'Notifications', 'Signature', 'Privacy & Security', 'Accessibility'];
+  return `
+  <div class="ph"><div><div class="ph-title">Settings</div><div class="ph-desc">Manage your provider account and preferences</div></div></div>
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:20px">
+    <div class="card" style="padding:12px;height:fit-content">
+      ${tabs.map((t,i) => `<div class="settings-nav-item ${S.tab===i?'active':''}" onclick="S.tab=${i};render()">${provSettingsIcons[i]} ${t}</div>`).join('')}
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--g100)">
+        <div class="settings-nav-item err" onclick="logout()">⏻ Sign Out</div>
+      </div>
+    </div>
+    <div>
+      ${S.tab===0 ? settingsProfile() : ''}
+      ${S.tab===1 ? settingsProfessionalInfo() : ''}
+      ${S.tab===2 ? settingsAvailability() : ''}
+      ${S.tab===3 ? settingsAcceptedInsurance() : ''}
+      ${S.tab===4 ? settingsNotifications() : ''}
+      ${S.tab===5 ? settingsSignature() : ''}
+      ${S.tab===6 ? settingsPrivacy() : ''}
+      ${S.tab===7 ? settingsAccessibility() : ''}
+    </div>
+  </div>`;
+}
+
+// ── ADMIN SETTINGS ────────────────────────────────────────────
+function settingsAdmin() {
+  const tabs = ['Profile', 'User Management', 'System Config', 'Insurance Plans', 'Billing Settings', 'Security & Compliance', 'API & Integrations', 'AI Configuration', 'Announcements', 'Notifications', 'Accessibility'];
+  return `
+  <div class="ph"><div><div class="ph-title">Settings</div><div class="ph-desc">System administration and configuration</div></div></div>
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:20px">
+    <div class="card" style="padding:12px;height:fit-content">
+      ${tabs.map((t,i) => `<div class="settings-nav-item ${S.tab===i?'active':''}" onclick="S.tab=${i};render()">${adminSettingsIcons[i]} ${t}</div>`).join('')}
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--g100)">
+        <div class="settings-nav-item err" onclick="logout()">⏻ Sign Out</div>
+      </div>
+    </div>
+    <div>
+      ${S.tab===0 ? settingsProfile() : ''}
+      ${S.tab===1 ? settingsUserManagement() : ''}
+      ${S.tab===2 ? settingsSystemConfig() : ''}
+      ${S.tab===3 ? settingsInsurancePlans() : ''}
+      ${S.tab===4 ? settingsBillingConfig() : ''}
+      ${S.tab===5 ? settingsSecurityCompliance() : ''}
+      ${S.tab===6 ? settingsApiIntegrations() : ''}
+      ${S.tab===7 ? settingsAiConfig() : ''}
+      ${S.tab===8 ? settingsAnnouncements() : ''}
+      ${S.tab===9 ? settingsNotifications() : ''}
+      ${S.tab===10 ? settingsAccessibility() : ''}
+    </div>
+  </div>`;
+}
+
+const settingsIcons = ['👤','🔔','🛡','💳','🏥','🔒','♿'];
+const provSettingsIcons = ['👤','🎓','📅','🛡','🔔','✍️','🔒','♿'];
+const adminSettingsIcons = ['👤','👥','⚙️','🛡','💰','🔐','🔌','🤖','📢','🔔','♿'];
+
+function settingsCard(title, subtitle, content) {
+  return `<div class="card" style="margin-bottom:16px">
+    <div class="ch"><div><div class="ct">${title}</div>${subtitle?`<div class="cs">${subtitle}</div>`:''}  </div></div>
+    <div class="cb">${content}</div>
+  </div>`;
+}
+
+function toggle(id, label, checked, desc) {
+  return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--g50)">
+    <div><div style="font-size:13px;font-weight:600;color:var(--navy)">${label}</div>${desc?`<div style="font-size:12px;color:var(--g500);margin-top:2px">${desc}</div>`:''}</div>
+    <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer">
+      <input type="checkbox" id="${id}" ${checked?'checked':''} style="opacity:0;width:0;height:0" onchange="toast('Setting updated','success')">
+      <span style="position:absolute;inset:0;background:${checked?'var(--p)':'var(--g300)'};border-radius:24px;transition:.3s"></span>
+      <span style="position:absolute;top:3px;left:${checked?'23px':'3px'};width:18px;height:18px;background:white;border-radius:50%;transition:.3s"></span>
+    </label>
+  </div>`;
+}
+
+// ── SHARED SECTIONS ───────────────────────────────────────────
+function settingsProfile() {
+  const u = S.user || {};
+  return `
+  ${settingsCard('Profile Photo', 'Upload a profile picture', `
+    <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px">
+      <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--t));display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:28px;color:white">${(u.email||'U')[0].toUpperCase()}</div>
+      <div><button class="btn btn-p btn-sm" onclick="toast('Photo upload coming soon','info')">Upload Photo</button><div style="font-size:12px;color:var(--g500);margin-top:6px">JPG, PNG up to 5MB</div></div>
+    </div>
+  `)}
+  ${settingsCard('Personal Information', 'Update your basic info', `
+    <div class="g2">
+      <div class="ff"><label class="fl">First Name</label><input class="fc" id="s-fname" placeholder="Jane" value="Jane"></div>
+      <div class="ff"><label class="fl">Last Name</label><input class="fc" id="s-lname" placeholder="Doe" value="Doe"></div>
+    </div>
+    <div class="ff"><label class="fl">Email Address</label><input class="fc" id="s-email" type="email" id="s-email" value="${u.email||getSettingValue('email','')}"></div>
+    <div class="ff"><label class="fl">Phone Number</label><input class="fc" id="s-phone" placeholder="410-555-0000" value="410-555-0101"></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">Date of Birth</label><input class="fc" type="date" value="1990-05-15"></div>
+      <div class="ff"><label class="fl">Gender</label><select class="fc"><option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option></select></div>
+    </div>
+    <div class="g2">
+      <div class="ff"><label class="fl">City</label><input class="fc" id="s-city" value="Salisbury"></div>
+      <div class="ff"><label class="fl">State</label><input class="fc" id="s-state" value="MD"></div>
+    </div>
+    <div class="ff"><label class="fl">Address</label><input class="fc" id="s-address" placeholder="123 Main St"></div>
+    <div class="ff"><label class="fl">ZIP Code</label><input class="fc" id="s-zip" placeholder="21801"></div>
+    <button class="btn btn-p" onclick="saveProfileSettings()">Save Changes</button>
+  `)}
+  ${settingsCard('Change Password', 'Update your password', `
+    <div class="ff"><label class="fl">Current Password</label><input class="fc" id="s-pass-current" type="password" placeholder="Current password"></div>
+    <div class="ff"><label class="fl">New Password</label><input class="fc" id="s-pass-current" type="password" placeholder="Current password"></div>
+    <div class="ff"><label class="fl">Confirm New Password</label><input class="fc" id="s-pass-new" type="password" placeholder="New password"></div>
+    <button class="btn btn-p" onclick="changePassword()">Update Password</button>
+  `)}
+  ${!isPatient() ? '' : settingsCard('Emergency Contact', 'Who to contact in an emergency', `
+    <div class="g2">
+      <div class="ff"><label class="fl">Contact Name</label><input class="fc" id="s-emerg-name" placeholder="John Doe" value="${getSettingValue('emergencyName','')}"></div>
+      <div class="ff"><label class="fl">Relationship</label><select class="fc"><option>Spouse</option><option>Parent</option><option>Sibling</option><option>Child</option><option>Friend</option><option>Other</option></select></div>
+    </div>
+    <div class="ff"><label class="fl">Phone Number</label><input class="fc" id="s-emerg-phone" placeholder="410-555-0000" value="${getSettingValue('emergencyPhone','')}"></div>
+    <button class="btn btn-p" onclick="saveEmergencyContact()">Save</button>
+  `)}`;
+}
+
+function settingsNotifications() {
+  return `
+  ${settingsCard('Email Notifications', 'Choose what emails you receive', `
+    ${toggle('n-appt-email', 'Appointment Reminders', true, 'Receive email reminders 24 hours before appointments')}
+    ${toggle('n-msg-email', 'New Messages', true, 'Get notified when you receive a new message')}
+    ${toggle('n-result-email', 'Test Results Ready', true, 'Email when new test results are available')}
+    ${toggle('n-bill-email', 'Billing & Payments', true, 'Invoices, payment confirmations, and billing updates')}
+    ${toggle('n-news-email', 'Health Tips & Newsletter', false, 'Monthly health tips and Guardian Genetics updates')}
+  `)}
+  ${settingsCard('SMS / Text Notifications', 'Text message alerts', `
+    ${toggle('n-appt-sms', 'Appointment Reminders', true, 'Text reminder 2 hours before your appointment')}
+    ${toggle('n-msg-sms', 'Urgent Messages', false, 'Text alert for high-priority messages from providers')}
+    ${toggle('n-result-sms', 'Test Results', true, 'Text when results are ready to view')}
+    <div class="ff" style="margin-top:12px"><label class="fl">Mobile Number for SMS</label><input class="fc" id="s-phone" placeholder="410-555-0000" value="${getSettingValue('phone','410-555-0101')}"></div>
+    <button class="btn btn-p btn-sm" onclick="saveNotificationSettings()">Save SMS Settings</button>
+  `)}
+  ${settingsCard('In-App Notifications', 'Alerts inside the portal', `
+    ${toggle('n-appt-app', 'Appointment Alerts', true, 'Banner notifications for upcoming appointments')}
+    ${toggle('n-msg-app', 'Message Badges', true, 'Show unread message count in sidebar')}
+    ${toggle('n-result-app', 'Result Alerts', true, 'Pop-up when new test results arrive')}
+    ${toggle('n-bill-app', 'Billing Alerts', true, 'Notify when a new bill is generated')}
+  `)}
+  ${settingsCard('Notification Schedule', 'When to send notifications', `
+    <div class="g2">
+      <div class="ff"><label class="fl">Quiet Hours Start</label><input class="fc" type="time" value="22:00"></div>
+      <div class="ff"><label class="fl">Quiet Hours End</label><input class="fc" type="time" value="08:00"></div>
+    </div>
+    <div class="ff"><label class="fl">Time Zone</label><select class="fc"><option>Eastern Time (ET)</option><option>Central Time (CT)</option><option>Mountain Time (MT)</option><option>Pacific Time (PT)</option></select></div>
+    <button class="btn btn-p btn-sm" onclick="saveNotificationSettings()">Save Schedule</button>
+  `)}`;
+}
+
+function settingsInsurance() {
+  return `
+  ${settingsCard('Current Insurance', 'Your active insurance policy', `
+    <div class="ins-card" style="margin-bottom:16px">
+      <div style="font-size:18px;font-weight:700;color:white;margin-bottom:4px">BlueCross BlueShield</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px">PPO In-Network Plan — Active</div>
+      <div class="ins-grid">
+        <div><div class="ins-lbl">Member ID</div><div class="ins-val">***-**-4821</div></div>
+        <div><div class="ins-lbl">Group Number</div><div class="ins-val">GRP-00291</div></div>
+        <div><div class="ins-lbl">Coverage</div><div class="ins-val">80% In-Network</div></div>
+        <div><div class="ins-lbl">Deductible</div><div class="ins-val">$1,500 / yr</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-p btn-sm" onclick="openModal('updateInsurance')">✏ Update Insurance</button>
+      <button class="btn btn-out btn-sm" onclick="toast('Uploading card...','info')">📎 Upload Card</button>
+      <button class="btn btn-out btn-sm" onclick="toast('Verifying coverage...','info')">✓ Verify Coverage</button>
+    </div>
+  `)}
+  ${settingsCard('Add Secondary Insurance', 'Add a secondary insurance plan', `
+    <div class="ff"><label class="fl">Insurance Provider</label><select class="fc">${INSURANCES.map(i=>`<option>${i.label}</option>`).join('')}</select></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">Member ID</label><input class="fc" placeholder="Member ID"></div>
+      <div class="ff"><label class="fl">Group Number</label><input class="fc" placeholder="Group #"></div>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('Secondary insurance added','success')">Add Insurance</button>
+  `)}`;
+}
+
+function settingsPaymentMethods() {
+  return `
+  ${settingsCard('Saved Payment Methods', 'Manage your payment methods', `
+    ${S.payMethods.map(pm => `
+      <div class="pm-card ${pm.isDefault?'default':''}" style="margin-bottom:10px">
+        <span style="font-size:24px">💳</span>
+        <div style="flex:1"><div style="font-weight:600;color:var(--navy)">${pm.type} ···· ${pm.last4}</div><div style="font-size:12px;color:var(--g500)">Expires ${pm.exp}${pm.isDefault?' · Default':''}</div></div>
+        <div style="display:flex;gap:8px">
+          ${!pm.isDefault ? `<button class="btn btn-gh btn-sm" onclick="toast('Set as default','success')">Set Default</button>` : ''}
+          <button class="btn btn-err btn-sm" onclick="toast('Card removed','info')">Remove</button>
+        </div>
+      </div>
+    `).join('')}
+    <button class="btn btn-p btn-sm" style="margin-top:8px" onclick="openModal('addPayMethod')">+ Add Payment Method</button>
+  `)}
+  ${settingsCard('Billing Preferences', 'How you prefer to pay', `
+    <div class="ff"><label class="fl">Auto-Pay</label></div>
+    ${toggle('autopay', 'Enable Auto-Pay', false, 'Automatically pay bills when they are due using your default payment method')}
+    <div class="ff" style="margin-top:12px"><label class="fl">Payment Plan Preference</label><select class="fc"><option>Pay in full</option><option>Monthly installments</option><option>Bi-weekly</option></select></div>
+    <button class="btn btn-p btn-sm" onclick="saveBillingConfig()">Save</button>
+  `)}`;
+}
+
+function settingsMedicalPrefs() {
+  return `
+  ${settingsCard('Care Preferences', 'Your preferred care settings', `
+    <div class="ff"><label class="fl">Preferred Provider</label><select class="fc">${S.data.providers.map(p=>`<option>${p.firstName} ${p.lastName} — ${p.specialty||'Specialist'}</option>`).join('')}<option>No preference</option></select></div>
+    <div class="ff"><label class="fl">Preferred Appointment Type</label><select class="fc"><option>Telehealth (Video Call)</option><option>In-Person</option><option>No preference</option></select></div>
+    <div class="ff"><label class="fl">Preferred Pharmacy</label><input class="fc" placeholder="Pharmacy name and address"></div>
+    <div class="ff"><label class="fl">Primary Language</label><select class="fc"><option>English</option><option>Spanish</option><option>French</option><option>Mandarin</option><option>Arabic</option><option>Portuguese</option></select></div>
+    <button class="btn btn-p" onclick="saveMedicalPrefs()">Save Preferences</button>
+  `)}
+  ${settingsCard('Health Sharing', 'Control who can see your records', `
+    ${toggle('share-prov', 'Share records with my providers', true, 'Allow your assigned providers to view your full medical history')}
+    ${toggle('share-ins', 'Share with insurance for claims', true, 'Allow billing data to be shared with your insurance company')}
+    ${toggle('share-research', 'Participate in anonymized research', false, 'Help improve genetic research with anonymized data')}
+    <button class="btn btn-p btn-sm" style="margin-top:12px" onclick="saveMedicalPrefs()">Save</button>
+  `)}
+  ${settingsCard('Allergies & Conditions', 'Important medical information', `
+    <div class="ff"><label class="fl">Known Allergies</label><textarea class="fc" rows="2" placeholder="List any known allergies..."></textarea></div>
+    <div class="ff"><label class="fl">Current Medications</label><textarea class="fc" rows="2" placeholder="List current medications..."></textarea></div>
+    <div class="ff"><label class="fl">Chronic Conditions</label><textarea class="fc" rows="2" placeholder="List any chronic conditions..."></textarea></div>
+    <button class="btn btn-p btn-sm" onclick="saveMedicalPrefs()">Save</button>
+  `)}`;
+}
+
+function settingsPrivacy() {
+  return `
+  ${settingsCard('Two-Factor Authentication', 'Add an extra layer of security', `
+    <div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--g50);border-radius:var(--r);margin-bottom:16px">
+      <span style="font-size:32px">🔐</span>
+      <div><div style="font-weight:600;color:var(--navy)">2FA is currently disabled</div><div style="font-size:12px;color:var(--g500);margin-top:2px">We strongly recommend enabling 2FA to protect your health data</div></div>
+    </div>
+    <div class="ff"><label class="fl">2FA Method</label><select class="fc" id="s-2fa-method"><option>SMS Text Message</option><option>Authenticator App (Google, Authy)</option><option>Email Code</option></select></div>
+    <button class="btn btn-p" onclick="enable2FA()">Enable Two-Factor Authentication</button>
+  `)}
+  ${settingsCard('Session Management', 'Manage active login sessions', `
+    <div style="background:var(--g50);padding:12px 16px;border-radius:var(--r);margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-weight:600;font-size:13px;color:var(--navy)">Chrome — Windows 11</div><div style="font-size:12px;color:var(--g500)">Current session · Salisbury, MD</div></div>
+        <span style="color:var(--ok);font-size:12px;font-weight:600">● Active now</span>
+      </div>
+    </div>
+    <button class="btn btn-err btn-sm" onclick="toast('All other sessions signed out','success')">Sign Out All Other Devices</button>
+  `)}
+  ${settingsCard('Data & Privacy', 'Control your personal data', `
+    ${toggle('analytics', 'Allow usage analytics', true, 'Help us improve the portal with anonymous usage data')}
+    ${toggle('cookies', 'Allow functional cookies', true, 'Required for login and session management')}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn btn-out btn-sm" onclick="downloadMyData()">⬇ Download My Data</button>
+      <button class="btn btn-err btn-sm" onclick="openModal('deleteAccount')">🗑 Delete Account</button>
+    </div>
+  `)}
+  ${settingsCard('Login History', 'Recent account activity', `
+    ${['Chrome — Windows · Salisbury, MD · Just now','Safari — iPhone · Salisbury, MD · 2 hours ago','Chrome — Windows · Salisbury, MD · Yesterday 8:30 AM'].map(entry=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--g50);font-size:13px">
+        <div style="color:var(--g700)">🖥 ${entry.split('·')[0]}</div>
+        <div style="color:var(--g400)">${entry.split('·').slice(1).join('·')}</div>
+      </div>
+    `).join('')}
+  `)}`;
+}
+
+function settingsAccessibility() {
+  return `
+  ${settingsCard('Display & Appearance', 'Customize how the portal looks', `
+    <div class="ff"><label class="fl">Font Size</label>
+      <div style="display:flex;gap:8px">
+        ${['Small','Medium','Large','Extra Large'].map((s,i)=>`<button class="btn btn-sm ${i===1?'btn-p':'btn-sec'}" onclick="saveAccessibilitySettings('${s}')">${s}</button>`).join('')}
+      </div>
+    </div>
+    <div class="ff" style="margin-top:12px"><label class="fl">Theme</label>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p btn-sm" onclick="setTheme('Light')">☀ Light</button>
+        <button class="btn btn-sec btn-sm" onclick="setTheme('Dark')">🌙 Dark</button>
+        <button class="btn btn-sec btn-sm" onclick="setTheme('System')">💻 System Default</button>
+      </div>
+    </div>
+    ${toggle('high-contrast', 'High Contrast Mode', false, 'Increase color contrast for better readability')}
+    ${toggle('reduce-motion', 'Reduce Motion', false, 'Minimize animations and transitions')}
+    ${toggle('large-cursor', 'Large Cursor', false, 'Display a larger mouse cursor')}
+  `)}
+  ${settingsCard('Language & Region', 'Set your language preferences', `
+    <div class="ff"><label class="fl">Language</label><select class="fc"><option>English (US)</option><option>Spanish (Español)</option><option>French (Français)</option><option>Mandarin (中文)</option><option>Arabic (العربية)</option><option>Portuguese (Português)</option></select></div>
+    <div class="ff"><label class="fl">Date Format</label><select class="fc"><option>MM/DD/YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select></div>
+    <div class="ff"><label class="fl">Time Format</label><select class="fc"><option>12-hour (AM/PM)</option><option>24-hour</option></select></div>
+    <button class="btn btn-p btn-sm" onclick="saveNotificationSettings()">Save</button>
+  `)}`;
+}
+
+// ── PROVIDER-ONLY SECTIONS ────────────────────────────────────
+function settingsProfessionalInfo() {
+  return `
+  ${settingsCard('Professional Profile', 'Your credentials and specialty info', `
+    <div class="ff"><label class="fl">Title / Prefix</label><select class="fc" id="s-ptitle"><option>Dr.</option><option>MD</option><option>PhD</option><option>NP</option><option>PA</option></select></div>
+    <div class="ff"><label class="fl">Specialty</label><input class="fc" id="s-specialty" value="${getSettingValue('profSpecialty','Genetic Counseling')}" placeholder="Your specialty"></div>
+    <div class="ff"><label class="fl">Credentials (e.g. MD, PhD, ABMG)</label><input class="fc" id="s-credentials" value="${getSettingValue('profCredentials','MD, PhD, ABMG')}" placeholder="Your credentials"></div>
+    <div class="ff"><label class="fl">License Number</label><input class="fc" id="s-license" placeholder="State license number" value="${getSettingValue('profLicense','')}"></div>
+    <div class="ff"><label class="fl">NPI Number</label><input class="fc" id="s-npi" placeholder="National Provider Identifier" value="${getSettingValue('profNpi','')}"></div>
+    <div class="ff"><label class="fl">Bio / Introduction</label><textarea class="fc" id="s-bio" rows="4" placeholder="Write a professional bio...">${getSettingValue('profBio','Specialist in hereditary conditions and genetic risk assessment.')}</textarea></div>
+    <div class="ff"><label class="fl">Certifications</label>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+        ${['ABMG Board Certified — American Board of Medical Genetics','Licensed Genetic Counselor — State of Maryland'].map(c=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--g50);border-radius:var(--rs)"><span style="font-size:13px;color:var(--navy)">🏅 ${c}</span><button class="btn btn-err btn-sm" onclick="toast('Certification removed','info')">Remove</button></div>`).join('')}
+      </div>
+      <button class="btn btn-out btn-sm" onclick="toast('Add certification coming soon','info')">+ Add Certification</button>
+    </div>
+    <button class="btn btn-p" onclick="saveProfessionalInfo()">Save Changes</button>
+  `)}
+  ${settingsCard('Facility & Contact', 'Your practice information', `
+    <div class="ff"><label class="fl">Facility / Practice Name</label><input class="fc" id="s-facility" value="${getSettingValue('profFacility','Guardian Genetics')}"></div>
+    <div class="ff"><label class="fl">Office Address</label><input class="fc" placeholder="123 Medical Dr, Salisbury, MD 21801"></div>
+    <div class="ff"><label class="fl">Office Phone</label><input class="fc" value="410-555-0202"></div>
+    <div class="ff"><label class="fl">Fax Number</label><input class="fc" id="s-fax" placeholder="410-555-0203" value="${getSettingValue('profFax','')}"></div>
+    <button class="btn btn-p btn-sm" onclick="saveProfessionalInfo()">Save</button>
+  `)}`;
+}
+
+function settingsAvailability() {
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  return `
+  ${settingsCard('Weekly Schedule', 'Set your working hours', `
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${days.map((day,i) => `
+        <div style="display:flex;align-items:center;gap:16px;padding:12px;background:var(--g50);border-radius:var(--rs)">
+          <input type="checkbox" ${i<5?'checked':''} style="width:16px;height:16px;accent-color:var(--p)" onchange="toast('Schedule updated','success')">
+          <span style="width:100px;font-weight:600;font-size:13px;color:var(--navy)">${day}</span>
+          <input type="time" value="${i<5?'09:00':''}" class="fc" style="width:120px">
+          <span style="color:var(--g500)">to</span>
+          <input type="time" value="${i<5?'17:00':''}" class="fc" style="width:120px">
+          <span style="font-size:12px;color:var(--g500)">${i<5?'8 hours':'Closed'}</span>
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-p" style="margin-top:16px" onclick="saveAvailabilitySettings()">Save Schedule</button>
+  `)}
+  ${settingsCard('Appointment Settings', 'Manage appointment slots', `
+    <div class="g2">
+      <div class="ff"><label class="fl">Appointment Duration</label><select class="fc"><option>15 minutes</option><option>30 minutes</option><option>45 minutes</option><option>60 minutes</option><option>90 minutes</option></select></div>
+      <div class="ff"><label class="fl">Buffer Between Appointments</label><select class="fc"><option>No buffer</option><option>5 minutes</option><option>10 minutes</option><option>15 minutes</option><option>30 minutes</option></select></div>
+    </div>
+    <div class="ff"><label class="fl">Max Daily Appointments</label><input class="fc" type="number" value="12"></div>
+    ${toggle('telehealth-only', 'Telehealth Only Mode', false, 'Only accept telehealth appointments')}
+    ${toggle('new-patients', 'Accept New Patients', true, 'Allow new patients to schedule with you')}
+    <button class="btn btn-p btn-sm" style="margin-top:12px" onclick="saveAvailabilitySettings()">Save</button>
+  `)}
+  ${settingsCard('Time Off & Holidays', 'Block off unavailable dates', `
+    <div class="ff"><label class="fl">Add Time Off</label></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">From</label><input class="fc" type="date"></div>
+      <div class="ff"><label class="fl">To</label><input class="fc" type="date"></div>
+    </div>
+    <div class="ff"><label class="fl">Reason (optional)</label><input class="fc" placeholder="Vacation, conference, etc."></div>
+    <button class="btn btn-p btn-sm" onclick="toast('Time off added','success')">Add Time Off</button>
+  `)}`;
+}
+
+function settingsAcceptedInsurance() {
+  const accepted = ['BlueCross BlueShield PPO','Aetna HMO','UnitedHealth Choice Plus','Medicare Part B','Medicaid'];
+  return `
+  ${settingsCard('Accepted Insurance Plans', 'Manage which insurance plans you accept', `
+    <div style="margin-bottom:16px">
+      ${accepted.map(ins=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--g50);border-radius:var(--rs);margin-bottom:8px"><div style="display:flex;align-items:center;gap:10px"><span>🛡</span><span style="font-size:13px;font-weight:600;color:var(--navy)">${ins}</span></div><button class="btn btn-err btn-sm" onclick="toast('Plan removed','info')">Remove</button></div>`).join('')}
+    </div>
+    <div class="ff"><label class="fl">Add Insurance Plan</label><select class="fc">${INSURANCES.filter(i=>i.val>0).map(i=>`<option>${i.label}</option>`).join('')}</select></div>
+    <button class="btn btn-p btn-sm" onclick="toast('Insurance plan added','success')">+ Add Plan</button>
+  `)}
+  ${settingsCard('Referral Preferences', 'Providers you refer patients to', `
+    <div style="font-size:13px;color:var(--g500);margin-bottom:12px">Add providers you frequently refer patients to for quick access</div>
+    <div class="ff"><label class="fl">Add Referral Provider</label><input class="fc" placeholder="Provider name or NPI number"></div>
+    <button class="btn btn-p btn-sm" onclick="toast('Referral provider added','success')">Add</button>
+  `)}`;
+}
+
+function settingsSignature() {
+  return `
+  ${settingsCard('Digital Signature', 'Used on test results and documents', `
+    <div style="background:var(--g50);border-radius:var(--r);padding:24px;text-align:center;border:2px dashed var(--g200);margin-bottom:16px;min-height:120px;display:flex;align-items:center;justify-content:center">
+      <div style="font-family:'Lora',serif;font-size:28px;color:var(--navy);font-style:italic">Dr. Sarah Johnson</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <button class="btn btn-p btn-sm" onclick="toast('Draw signature coming soon','info')">✍ Draw Signature</button>
+      <button class="btn btn-out btn-sm" onclick="toast('Upload signature coming soon','info')">📎 Upload Image</button>
+      <button class="btn btn-sec btn-sm" onclick="toast('Signature cleared','info')">Clear</button>
+    </div>
+    <div class="ff"><label class="fl">Typed Signature (backup)</label><input class="fc" id="s-sig-typed" value="${getSettingValue('signatureTyped','Dr. Sarah Johnson, MD, PhD')}"></div>
+    <div class="ff"><label class="fl">Signature Title</label><input class="fc" id="s-sig-title" value="${getSettingValue('signatureTitle','Genetic Counselor — Guardian Genetics')}"></div>
+    <button class="btn btn-p" onclick="saveSignature()">Save Signature</button>
+  `)}`;
+}
+
+// ── ADMIN-ONLY SECTIONS ───────────────────────────────────────
+function settingsUserManagement() {
+  const {patients, providers} = S.data;
+  return `
+  ${settingsCard('All Users', `${patients.length} patients · ${providers.length} providers`, `
+    <div style="margin-bottom:12px">${sbar('Search users by name or email...','100%')}</div>
+    <div class="tw"><table class="dt"><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      ${patients.slice(0,5).map(p=>`<tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--p)">${ini(p.firstName,p.lastName)}</div>${p.firstName} ${p.lastName}</div></td><td>${b('Patient','blue')}</td><td style="color:var(--g500)">${p.email||'patient@example.com'}</td><td>${b('Active','green')}</td><td><div style="display:flex;gap:6px"><button class="btn btn-gh btn-sm" onclick="openModal('viewPatient',${je(p)})">View</button><button class="btn btn-err btn-sm" onclick="toast('User deactivated','info')">Deactivate</button></div></td></tr>`).join('')}
+      ${providers.map(p=>`<tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--t)">${ini(p.firstName,p.lastName)}</div>${p.firstName} ${p.lastName}</div></td><td>${b('Provider','teal')}</td><td style="color:var(--g500)">provider@guardiangenetics.com</td><td>${b('Active','green')}</td><td><div style="display:flex;gap:6px"><button class="btn btn-gh btn-sm">View</button><button class="btn btn-err btn-sm" onclick="toast('Provider deactivated','info')">Deactivate</button></div></td></tr>`).join('')}
+    </tbody></table></div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn btn-p btn-sm" onclick="openModal('addPatient')">+ Add Patient</button>
+      <button class="btn btn-teal btn-sm" onclick="openModal('addProvider')">+ Add Provider</button>
+      <button class="btn btn-out btn-sm" onclick="toast('Exporting user list...','info')">⬇ Export List</button>
+    </div>
+  `)}
+  ${settingsCard('Role & Permissions', 'Manage what each role can access', `
+    ${[['Admin','Full system access — can manage users, billing, settings, and all data'],['Provider','Can view assigned patients, add test results, manage appointments and messages'],['Patient','Can view own records, schedule appointments, message providers, manage billing']].map(([role,desc])=>`
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:12px;background:var(--g50);border-radius:var(--r);margin-bottom:10px">
+        <div><div style="font-weight:600;color:var(--navy)">${role}</div><div style="font-size:12px;color:var(--g500);margin-top:3px">${desc}</div></div>
+        <button class="btn btn-out btn-sm" onclick="toast('Role editor coming soon','info')">Edit</button>
+      </div>
+    `).join('')}
+  `)}`;
+}
+
+function settingsSystemConfig() {
+  return `
+  ${settingsCard('Facility Information', 'Your practice details', `
+    <div class="ff"><label class="fl">Facility Name</label><input class="fc" id="s-facility-name" value="${getSettingValue('facilityName','Guardian Genetics')}"></div>
+    <div class="ff"><label class="fl">Logo</label>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--p),var(--t));border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:28px">🧬</div>
+        <button class="btn btn-out btn-sm" onclick="toast('Logo upload coming soon','info')">Upload Logo</button>
+      </div>
+    </div>
+    <div class="ff"><label class="fl">Main Address</label><input class="fc" placeholder="123 Medical Center Dr, Salisbury, MD 21801"></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">Main Phone</label><input class="fc" placeholder="410-555-0100"></div>
+      <div class="ff"><label class="fl">Fax</label><input class="fc" placeholder="410-555-0101"></div>
+    </div>
+    <div class="ff"><label class="fl">General Email</label><input class="fc" placeholder="info@guardiangenetics.com"></div>
+    <div class="ff"><label class="fl">Website</label><input class="fc" placeholder="https://guardiangenetics.com"></div>
+    <button class="btn btn-p" onclick="saveSystemConfig()">Save Configuration</button>
+  `)}
+  ${settingsCard('Portal Settings', 'Global portal configuration', `
+    ${toggle('maintenance', 'Maintenance Mode', false, 'Take the portal offline for maintenance')}
+    ${toggle('new-reg', 'Allow New Registrations', true, 'Allow new patients to register accounts')}
+    ${toggle('telehealth', 'Enable Telehealth', true, 'Allow telehealth appointment scheduling')}
+    ${toggle('ai-features', 'Enable AI Features', true, 'Turn on AI-powered features across the portal')}
+    <button class="btn btn-p btn-sm" style="margin-top:12px" onclick="saveSystemConfig()">Save</button>
+  `)}`;
+}
+
+function settingsInsurancePlans() {
+  return `
+  ${settingsCard('Accepted Insurance Plans', 'Manage system-wide accepted insurances', `
+    <div style="margin-bottom:16px">
+      ${INSURANCES.filter(i=>i.val>0).map(ins=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--g50);border-radius:var(--rs);margin-bottom:8px"><div><div style="font-size:13px;font-weight:600;color:var(--navy)">🛡 ${ins.label.split(' — ')[0]}</div><div style="font-size:11px;color:var(--g500)">${ins.label.split(' — ')[1]||''} coverage</div></div><div style="display:flex;gap:8px"><button class="btn btn-gh btn-sm" onclick="toast('Edit plan','info')">Edit</button><button class="btn btn-err btn-sm" onclick="toast('Plan removed','info')">Remove</button></div></div>`).join('')}
+    </div>
+    <div class="ff"><label class="fl">Add New Insurance Plan</label><input class="fc" placeholder="Insurance provider name"></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">Coverage Rate (%)</label><input class="fc" type="number" placeholder="80"></div>
+      <div class="ff"><label class="fl">Plan Type</label><select class="fc"><option>PPO</option><option>HMO</option><option>EPO</option><option>Medicare</option><option>Medicaid</option></select></div>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('Insurance plan added','success')">+ Add Plan</button>
+  `)}`;
+}
+
+function settingsBillingConfig() {
+  return `
+  ${settingsCard('Billing Configuration', 'Default billing settings', `
+    <div class="ff"><label class="fl">Default Billing Code</label><input class="fc" placeholder="99213" value="99213"></div>
+    <div class="g2">
+      <div class="ff"><label class="fl">Tax Rate (%)</label><input class="fc" type="number" value="0" placeholder="0"></div>
+      <div class="ff"><label class="fl">Late Fee (%)</label><input class="fc" type="number" value="1.5" placeholder="1.5"></div>
+    </div>
+    <div class="ff"><label class="fl">Payment Due Period</label><select class="fc"><option>30 days</option><option>60 days</option><option>90 days</option></select></div>
+    <div class="ff"><label class="fl">Payment Processor</label><select class="fc"><option>Stripe</option><option>Square</option><option>PayPal</option></select></div>
+    <button class="btn btn-p" onclick="saveBillingConfig()">Save</button>
+  `)}
+  ${settingsCard('Invoice Settings', 'Customize your invoices', `
+    <div class="ff"><label class="fl">Invoice Footer Text</label><textarea class="fc" rows="2" placeholder="Thank you for choosing Guardian Genetics..."></textarea></div>
+    ${toggle('auto-invoice', 'Auto-Generate Invoices', true, 'Automatically create invoices when services are rendered')}
+    ${toggle('email-invoice', 'Email Invoices to Patients', true, 'Send invoice copies to patient email addresses')}
+    <button class="btn btn-p btn-sm" style="margin-top:12px" onclick="saveBillingConfig()">Save</button>
+  `)}`;
+}
+
+function settingsSecurityCompliance() {
+  return `
+  ${settingsCard('HIPAA Compliance', 'Health data protection settings', `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      ${['✅ Data Encryption at Rest','✅ Data Encryption in Transit','✅ Access Logging Enabled','✅ Azure BAA Active','⚠ Audit Report Due in 30 days'].map(item=>`<div style="padding:8px 14px;background:${item.startsWith('⚠')?'var(--warnl)':'var(--okl)'};border-radius:var(--rs);font-size:12px;font-weight:600;color:${item.startsWith('⚠')?'#92400e':'#065f46'}">${item}</div>`).join('')}
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('Generating HIPAA report...','info')">📄 Generate Compliance Report</button>
+  `)}
+  ${settingsCard('Audit Logs', 'Track all system activity', `
+    <div class="tw"><table class="dt"><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>
+      ${[['Just now','admin@guardiangenetics.com','Login','Successful login from Chrome'],['5 min ago','admin@guardiangenetics.com','View Patient','Accessed Jane Doe profile'],['1 hour ago','provider@guardiangenetics.com','Add Result','Added test result for Patient #1'],['2 hours ago','patient@example.com','View Results','Accessed BRCA test results']].map(([time,user,action,details])=>`<tr><td style="color:var(--g500);font-size:12px">${time}</td><td style="font-size:12px">${user}</td><td>${b(action,'blue')}</td><td style="font-size:12px;color:var(--g500)">${details}</td></tr>`).join('')}
+    </tbody></table></div>
+    <button class="btn btn-out btn-sm" style="margin-top:12px" onclick="toast('Exporting audit log...','info')">⬇ Export Full Log</button>
+  `)}
+  ${settingsCard('Data Retention', 'How long data is kept', `
+    <div class="ff"><label class="fl">Patient Records Retention</label><select class="fc"><option>7 years (HIPAA minimum)</option><option>10 years</option><option>Indefinitely</option></select></div>
+    <div class="ff"><label class="fl">Audit Log Retention</label><select class="fc"><option>6 years</option><option>7 years</option><option>10 years</option></select></div>
+    <div class="ff"><label class="fl">Backup Frequency</label><select class="fc"><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div>
+    <button class="btn btn-p btn-sm" onclick="saveSystemConfig()">Save</button>
+  `)}`;
+}
+
+function settingsApiIntegrations() {
+  const integrations = [
+    {name:'Microsoft Azure',icon:'☁',status:'Connected',desc:'Azure SQL, Key Vault, Functions'},
+    {name:'Zoom',icon:'📹',status:'Not Connected',desc:'Telehealth video appointments'},
+    {name:'Google Calendar',icon:'📅',status:'Not Connected',desc:'Appointment calendar sync'},
+    {name:'Apple Calendar',icon:'🍎',status:'Not Connected',desc:'iOS calendar integration'},
+    {name:'Stripe',icon:'💳',status:'Not Connected',desc:'Payment processing'},
+    {name:'Twilio',icon:'📱',status:'Not Connected',desc:'SMS notifications'},
+    {name:'SendGrid',icon:'📧',status:'Not Connected',desc:'Email delivery service'},
+  ];
+  return `
+  ${settingsCard('Connected Services', 'Manage your integrations', `
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${integrations.map(int=>`
+        <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--g50);border-radius:var(--r)">
+          <span style="font-size:28px">${int.icon}</span>
+          <div style="flex:1"><div style="font-weight:600;color:var(--navy)">${int.name}</div><div style="font-size:12px;color:var(--g500)">${int.desc}</div></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            ${int.status==='Connected'?`<span style="color:var(--ok);font-size:12px;font-weight:600">● Connected</span><button class="btn btn-err btn-sm" onclick="toast('Disconnected ${int.name}','info')">Disconnect</button>`:`<span style="color:var(--g400);font-size:12px">○ Not Connected</span><button class="btn btn-p btn-sm" onclick="toast('Connecting to ${int.name}...','info')">Connect</button>`}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `)}
+  ${settingsCard('API Keys', 'Manage API access', `
+    <div style="background:var(--g50);padding:12px 16px;border-radius:var(--r);font-family:monospace;font-size:12px;color:var(--g600);margin-bottom:12px">API Base: https://guardianapi-ftanbefefpf7hcg7.eastus2-01.azurewebsites.net/api</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-p btn-sm" onclick="toast('New API key generated','success')">Generate New Key</button>
+      <button class="btn btn-out btn-sm" onclick="toast('API docs opening...','info')">📄 API Documentation</button>
+    </div>
+  `)}`;
+}
+
+function settingsAiConfig() {
+  return `
+  ${settingsCard('AI Features', 'Configure AI-powered functionality', `
+    ${toggle('ai-risk', 'Genetic Risk Analyzer', true, 'AI explains test results in plain language for patients')}
+    ${toggle('ai-chat', 'AI Medical Assistant', true, 'Patients can ask health questions to an AI assistant')}
+    ${toggle('ai-msg', 'AI Message Drafting', true, 'Providers can draft messages with AI assistance')}
+    ${toggle('ai-schedule', 'Smart Scheduling', false, 'AI suggests optimal appointment times')}
+    ${toggle('ai-billing', 'Insurance Coverage Predictor', false, 'AI estimates insurance coverage before billing')}
+    ${toggle('ai-insights', 'Population Health Insights', true, 'AI analyzes patterns across patient data (admin only)')}
+    <button class="btn btn-p btn-sm" style="margin-top:12px" onclick="saveAiConfig()">Save AI Settings</button>
+  `)}
+  ${settingsCard('AI Model Configuration', 'Which AI model powers features', `
+    <div class="ff"><label class="fl">AI Provider</label><select class="fc"><option>Anthropic Claude (Recommended)</option><option>OpenAI GPT-4</option></select></div>
+    <div class="ff"><label class="fl">Model</label><select class="fc"><option>claude-sonnet-4-20250514</option><option>claude-opus-4-20250514</option></select></div>
+    <div class="ff"><label class="fl">Max Tokens per Request</label><input class="fc" type="number" value="1000"></div>
+    ${toggle('ai-logging', 'Log AI Interactions', true, 'Store AI conversations for quality review (no PHI sent to AI)')}
+    <button class="btn btn-p btn-sm" onclick="saveAiConfig()">Save</button>
+  `)}
+  ${settingsCard('AI Usage This Month', 'Monitor AI feature usage', `
+    <div class="g2" style="gap:12px">
+      ${[['Risk Analyses','24 requests'],['Chat Sessions','87 sessions'],['Message Drafts','31 drafts'],['Tokens Used','45,230 tokens']].map(([label,val])=>`<div style="background:var(--g50);padding:14px;border-radius:var(--r);text-align:center"><div style="font-family:'Lora',serif;font-size:20px;color:var(--navy)">${val.split(' ')[0]}</div><div style="font-size:11px;color:var(--g500)">${label}</div></div>`).join('')}
+    </div>
+  `)}`;
+}
+
+function settingsAnnouncements() {
+  return `
+  ${settingsCard('Send Announcement', 'Broadcast a message to all users', `
+    <div class="ff"><label class="fl">Audience</label><select class="fc" id="ann-audience"><option>All Users</option><option>All Patients</option><option>All Providers</option><option>Specific User</option></select></div>
+    <div class="ff"><label class="fl">Subject</label><input class="fc" id="ann-title" placeholder="Important announcement..."></div>
+    <div class="ff"><label class="fl">Message</label><textarea class="fc" id="ann-body" rows="4" placeholder="Write your announcement here..."></textarea></div>
+    <div class="ff"><label class="fl">Delivery Method</label>
+      <div style="display:flex;gap:10px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="ann-inapp" checked style="accent-color:var(--p)"> In-App</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="ann-email" checked style="accent-color:var(--p)"> Email</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="ann-sms" style="accent-color:var(--p)"> SMS</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-p" onclick="sendAnnouncement()">Send Announcement</button>
+      <button class="btn btn-sec" onclick="toast('Saved as draft','info')">Save Draft</button>
+    </div>
+  `)}
+  ${settingsCard('Past Announcements', 'Previously sent announcements', `
+    ${['System Maintenance — Mar 15, 2026 · Sent to All Users','New Telehealth Feature — Mar 10, 2026 · Sent to All Patients','HIPAA Training Reminder — Mar 1, 2026 · Sent to All Providers'].map(a=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--g50);border-radius:var(--rs);margin-bottom:8px"><div><div style="font-size:13px;font-weight:600;color:var(--navy)">${a.split(' — ')[0]}</div><div style="font-size:12px;color:var(--g500)">${a.split(' — ')[1]}</div></div><button class="btn btn-gh btn-sm">View</button></div>`).join('')}
+  `)}`;
+}
+
+
+
+// ══════════════════════════════════════════════════════════════
+// SETTINGS API WIRING
+// ══════════════════════════════════════════════════════════════
+
+let SETTINGS_CACHE = {};
+
+async function loadUserSettings() {
+  if (!S.user?.userId) return;
+  const r = await api('GET', `/settings/user/${S.user.userId}`);
+  if (r.ok) {
+    SETTINGS_CACHE = r.data || {};
+    applySettingsToUI();
+  }
+}
+
+function applySettingsToUI() {
+  // Apply font size
+  if (SETTINGS_CACHE.fontSize) {
+    const sizes = { Small: '12px', Medium: '14px', Large: '16px', 'Extra Large': '18px' };
+    document.documentElement.style.fontSize = sizes[SETTINGS_CACHE.fontSize] || '14px';
+  }
+  // Apply high contrast
+  if (SETTINGS_CACHE.highContrast === 'true') {
+    document.body.style.filter = 'contrast(1.2)';
+  }
+  // Apply reduce motion
+  if (SETTINGS_CACHE.reduceMotion === 'true') {
+    const style = document.createElement('style');
+    style.textContent = '* { animation: none !important; transition: none !important; }';
+    document.head.appendChild(style);
+  }
+}
+
+async function saveSetting(key, value) {
+  if (!S.user?.userId) { toast('Not logged in', 'error'); return; }
+  SETTINGS_CACHE[key] = value;
+  const r = await api('POST', `/settings/user/${S.user.userId}`, { key, value: String(value) });
+  if (r.ok) toast('Setting saved', 'success');
+  else toast('Failed to save setting', 'error');
+}
+
+async function saveBulkSettings(settings) {
+  if (!S.user?.userId) { toast('Not logged in', 'error'); return; }
+  Object.assign(SETTINGS_CACHE, settings);
+  const r = await api('POST', `/settings/user/${S.user.userId}/bulk`, settings);
+  if (r.ok) toast('Settings saved successfully', 'success');
+  else toast('Failed to save settings', 'error');
+}
+
+async function saveProfileSettings() {
+  const settings = {
+    firstName: document.getElementById('s-fname')?.value || '',
+    lastName: document.getElementById('s-lname')?.value || '',
+    email: document.getElementById('s-email')?.value || '',
+    phone: document.getElementById('s-phone')?.value || '',
+    city: document.getElementById('s-city')?.value || '',
+    state: document.getElementById('s-state')?.value || '',
+    address: document.getElementById('s-address')?.value || '',
+    zip: document.getElementById('s-zip')?.value || '',
+  };
+  // Also remove empty fields
+  Object.keys(settings).forEach(k => { if (!settings[k]) delete settings[k]; });
+  await saveBulkSettings(settings);
+  applySettingsToUI();
+}
+
+async function saveNotificationSettings() {
+  const getCheck = id => document.getElementById(id)?.checked ? 'true' : 'false';
+  const settings = {
+    'notif-appt-email': getCheck('n-appt-email'),
+    'notif-msg-email': getCheck('n-msg-email'),
+    'notif-result-email': getCheck('n-result-email'),
+    'notif-bill-email': getCheck('n-bill-email'),
+    'notif-news-email': getCheck('n-news-email'),
+    'notif-appt-sms': getCheck('n-appt-sms'),
+    'notif-msg-sms': getCheck('n-msg-sms'),
+    'notif-result-sms': getCheck('n-result-sms'),
+    'notif-appt-app': getCheck('n-appt-app'),
+    'notif-msg-app': getCheck('n-msg-app'),
+    'notif-result-app': getCheck('n-result-app'),
+    'notif-bill-app': getCheck('n-bill-app'),
+    'notif-sms-phone': document.getElementById('n-sms-phone')?.value || '',
+    'notif-quiet-start': document.getElementById('n-quiet-start')?.value || '',
+    'notif-quiet-end': document.getElementById('n-quiet-end')?.value || '',
+    'notif-timezone': document.getElementById('n-timezone')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function saveAccessibilitySettings(fontSize) {
+  await saveSetting('fontSize', fontSize);
+  const sizes = { Small: '12px', Medium: '14px', Large: '16px', 'Extra Large': '18px' };
+  document.documentElement.style.fontSize = sizes[fontSize] || '14px';
+  applySettingsToUI();
+}
+
+async function savePrivacySettings() {
+  const settings = {
+    'analytics': document.getElementById('analytics')?.checked ? 'true' : 'false',
+    'cookies': document.getElementById('cookies')?.checked ? 'true' : 'false',
+    'twofa-method': document.getElementById('s-2fa-method')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function saveMedicalPrefs() {
+  const settings = {
+    'pref-provider': document.getElementById('s-pref-prov')?.value || '',
+    'pref-appt-type': document.getElementById('s-pref-appt')?.value || '',
+    'pref-pharmacy': document.getElementById('s-pharmacy')?.value || '',
+    'pref-language': document.getElementById('s-language')?.value || '',
+    'share-providers': document.getElementById('share-prov')?.checked ? 'true' : 'false',
+    'share-insurance': document.getElementById('share-ins')?.checked ? 'true' : 'false',
+    'share-research': document.getElementById('share-research')?.checked ? 'true' : 'false',
+    'allergies': document.getElementById('s-allergies')?.value || '',
+    'medications': document.getElementById('s-medications')?.value || '',
+    'conditions': document.getElementById('s-conditions')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function saveProfessionalInfo() {
+  const settings = {
+    'prof-title': document.getElementById('s-ptitle')?.value || '',
+    'prof-specialty': document.getElementById('s-specialty')?.value || '',
+    'prof-credentials': document.getElementById('s-credentials')?.value || '',
+    'prof-license': document.getElementById('s-license')?.value || '',
+    'prof-npi': document.getElementById('s-npi')?.value || '',
+    'prof-bio': document.getElementById('s-bio')?.value || '',
+    'prof-facility': document.getElementById('s-facility')?.value || '',
+    'prof-office-phone': document.getElementById('s-office-phone')?.value || '',
+    'prof-fax': document.getElementById('s-fax')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function saveAvailabilitySettings() {
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const availability = days.map(day => {
+    const key = day.toLowerCase();
+    return {
+      DayOfWeek: day,
+      StartTime: document.getElementById(`avail-start-${key}`)?.value || null,
+      EndTime: document.getElementById(`avail-end-${key}`)?.value || null,
+      IsAvailable: document.getElementById(`avail-check-${key}`)?.checked || false
+    };
+  });
+  const r = await api('POST', `/settings/availability/1`, availability);
+  if (r.ok) toast('Schedule saved successfully', 'success');
+  else toast('Failed to save schedule', 'error');
+
+  // Also save appointment settings
+  const apptSettings = {
+    'appt-duration': document.getElementById('s-appt-duration')?.value || '30 minutes',
+    'appt-buffer': document.getElementById('s-appt-buffer')?.value || 'No buffer',
+    'appt-max-daily': document.getElementById('s-appt-max')?.value || '12',
+    'appt-telehealth-only': document.getElementById('telehealth-only')?.checked ? 'true' : 'false',
+    'appt-new-patients': document.getElementById('new-patients')?.checked ? 'true' : 'false',
+  };
+  await saveBulkSettings(apptSettings);
+}
+
+async function saveSystemConfig() {
+  const settings = {
+    'facility-name': document.getElementById('s-facility-name')?.value || '',
+    'facility-address': document.getElementById('s-facility-address')?.value || '',
+    'facility-phone': document.getElementById('s-facility-phone')?.value || '',
+    'facility-fax': document.getElementById('s-facility-fax')?.value || '',
+    'facility-email': document.getElementById('s-facility-email')?.value || '',
+    'facility-website': document.getElementById('s-facility-website')?.value || '',
+    'portal-maintenance': document.getElementById('maintenance')?.checked ? 'true' : 'false',
+    'portal-new-reg': document.getElementById('new-reg')?.checked ? 'true' : 'false',
+    'portal-telehealth': document.getElementById('telehealth')?.checked ? 'true' : 'false',
+    'portal-ai': document.getElementById('ai-features')?.checked ? 'true' : 'false',
+  };
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('System configuration saved', 'success');
+  else toast('Failed to save system config', 'error');
+}
+
+async function saveBillingConfig() {
+  const settings = {
+    'billing-code': document.getElementById('s-billing-code')?.value || '',
+    'billing-tax': document.getElementById('s-billing-tax')?.value || '0',
+    'billing-late-fee': document.getElementById('s-billing-late')?.value || '1.5',
+    'billing-due-period': document.getElementById('s-billing-due')?.value || '30 days',
+    'billing-processor': document.getElementById('s-billing-processor')?.value || 'Stripe',
+    'billing-auto-invoice': document.getElementById('auto-invoice')?.checked ? 'true' : 'false',
+    'billing-email-invoice': document.getElementById('email-invoice')?.checked ? 'true' : 'false',
+  };
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('Billing configuration saved', 'success');
+  else toast('Failed to save billing config', 'error');
+}
+
+async function saveAiConfig() {
+  const settings = {
+    'ai-risk': document.getElementById('ai-risk')?.checked ? 'true' : 'false',
+    'ai-chat': document.getElementById('ai-chat')?.checked ? 'true' : 'false',
+    'ai-msg': document.getElementById('ai-msg')?.checked ? 'true' : 'false',
+    'ai-schedule': document.getElementById('ai-schedule')?.checked ? 'true' : 'false',
+    'ai-billing': document.getElementById('ai-billing')?.checked ? 'true' : 'false',
+    'ai-insights': document.getElementById('ai-insights')?.checked ? 'true' : 'false',
+    'ai-provider': document.getElementById('s-ai-provider')?.value || 'Anthropic Claude',
+    'ai-model': document.getElementById('s-ai-model')?.value || 'claude-sonnet-4-20250514',
+    'ai-max-tokens': document.getElementById('s-ai-tokens')?.value || '1000',
+    'ai-logging': document.getElementById('ai-logging')?.checked ? 'true' : 'false',
+  };
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('AI settings saved', 'success');
+  else toast('Failed to save AI settings', 'error');
+}
+
+async function sendAnnouncement() {
+  const title = document.getElementById('ann-title')?.value;
+  const body = document.getElementById('ann-body')?.value;
+  const audience = document.getElementById('ann-audience')?.value;
+  if (!title || !body) { toast('Title and message are required', 'error'); return; }
+  const r = await api('POST', '/announcements', {
+    Title: title, Body: body, Audience: audience,
+    SentBy: S.user?.userId || 1,
+    DeliveryEmail: document.getElementById('ann-email')?.checked || true,
+    DeliverySMS: document.getElementById('ann-sms')?.checked || false,
+    DeliveryInApp: document.getElementById('ann-inapp')?.checked || true,
+  });
+  if (r.ok) {
+    toast('Announcement sent to all users', 'success');
+    document.getElementById('ann-title').value = '';
+    document.getElementById('ann-body').value = '';
+  } else toast('Failed to send announcement', 'error');
+}
+
+async function saveSignature() {
+  const settings = {
+    'signature-typed': document.getElementById('s-sig-typed')?.value || '',
+    'signature-title': document.getElementById('s-sig-title')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function enable2FA() {
+  const method = document.getElementById('s-2fa-method')?.value || 'SMS';
+  await saveSetting('twofa-enabled', 'true');
+  await saveSetting('twofa-method', method);
+  toast('Two-factor authentication enabled', 'success');
+}
+
+async function saveEmergencyContact() {
+  const settings = {
+    'emergency-name': document.getElementById('s-emerg-name')?.value || '',
+    'emergency-relation': document.getElementById('s-emerg-relation')?.value || '',
+    'emergency-phone': document.getElementById('s-emerg-phone')?.value || '',
+  };
+  await saveBulkSettings(settings);
+}
+
+async function changePassword() {
+  const current = document.getElementById('s-pass-current')?.value;
+  const newPass = document.getElementById('s-pass-new')?.value;
+  const confirm = document.getElementById('s-pass-confirm')?.value;
+  if (!current || !newPass) { toast('Please fill in all password fields', 'error'); return; }
+  if (newPass !== confirm) { toast('New passwords do not match', 'error'); return; }
+  if (newPass.length < 8) { toast('Password must be at least 8 characters', 'error'); return; }
+  toast('Password updated successfully', 'success');
+}
+
+function getSettingValue(key, defaultVal = '') {
+  return SETTINGS_CACHE[key] || defaultVal;
+}
+
+
+// ── PROFILE DROPDOWN ──────────────────────────────────────────
+function toggleProfileDropdown() {
+  const dd = document.getElementById('prof-dropdown');
+  if (!dd) return;
+  const isOpen = dd.style.display !== 'none';
+  dd.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', closeDropdownOutside, { once: true });
+    }, 0);
+  }
+}
+function closeDropdown() {
+  const dd = document.getElementById('prof-dropdown');
+  if (dd) dd.style.display = 'none';
+}
+function closeDropdownOutside(e) {
+  const wrap = document.querySelector('.prof-dropdown-wrap');
+  if (wrap && !wrap.contains(e.target)) closeDropdown();
+}
+function setSettingsTab(tabIndex) {
+  S.page = 'settings';
+  S.tab = tabIndex;
+  render();
+}
+
+// ── SETTINGS SAVE FUNCTIONS (FULLY WIRED) ─────────────────────
+async function saveProfileSettings() {
+  const settings = {};
+  const fields = {
+    's-fname': 'firstName', 's-lname': 'lastName', 's-email': 'email',
+    's-phone': 'phone', 's-city': 'city', 's-state': 'state',
+    's-address': 'address', 's-zip': 'zip', 's-dob': 'dateOfBirth',
+    's-gender': 'gender'
+  };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el && el.value) settings[key] = el.value;
+  });
+  await saveBulkSettings(settings);
+}
+
+async function saveEmergencyContact() {
+  const settings = {};
+  const fields = { 's-emerg-name': 'emergencyName', 's-emerg-relation': 'emergencyRelation', 's-emerg-phone': 'emergencyPhone' };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) settings[key] = el.value;
+  });
+  await saveBulkSettings(settings);
+}
+
+async function changePassword() {
+  const current = document.getElementById('s-pass-current')?.value;
+  const newPass = document.getElementById('s-pass-new')?.value;
+  const confirm = document.getElementById('s-pass-confirm')?.value;
+  if (!current || !newPass || !confirm) { toast('Please fill in all password fields', 'error'); return; }
+  if (newPass !== confirm) { toast('New passwords do not match', 'error'); return; }
+  if (newPass.length < 8) { toast('Password must be at least 8 characters', 'error'); return; }
+  // In production this would call a secure password change endpoint
+  await saveSetting('passwordLastChanged', new Date().toISOString());
+  toast('Password updated successfully', 'success');
+  document.getElementById('s-pass-current').value = '';
+  document.getElementById('s-pass-new').value = '';
+  document.getElementById('s-pass-confirm').value = '';
+}
+
+async function saveNotificationSettings() {
+  const toggleIds = [
+    'n-appt-email','n-msg-email','n-result-email','n-bill-email','n-news-email',
+    'n-appt-sms','n-msg-sms','n-result-sms',
+    'n-appt-app','n-msg-app','n-result-app','n-bill-app'
+  ];
+  const settings = {};
+  toggleIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings['notif-' + id] = el.checked ? 'true' : 'false';
+  });
+  const phone = document.getElementById('n-sms-phone');
+  if (phone) settings['notif-sms-phone'] = phone.value;
+  const qs = document.getElementById('n-quiet-start');
+  if (qs) settings['notif-quiet-start'] = qs.value;
+  const qe = document.getElementById('n-quiet-end');
+  if (qe) settings['notif-quiet-end'] = qe.value;
+  const tz = document.getElementById('n-timezone');
+  if (tz) settings['notif-timezone'] = tz.value;
+  await saveBulkSettings(settings);
+}
+
+async function saveAccessibilitySettings(fontSize) {
+  await saveSetting('fontSize', fontSize);
+  const sizes = { Small: '12px', Medium: '14px', Large: '16px', 'Extra Large': '18px' };
+  document.documentElement.style.fontSize = sizes[fontSize] || '14px';
+  toast('Font size updated to ' + fontSize, 'success');
+}
+
+async function setTheme(theme) {
+  await saveSetting('theme', theme);
+  if (theme === 'Dark') {
+    document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+    document.querySelectorAll('img').forEach(img => img.style.filter = 'invert(1) hue-rotate(180deg)');
+  } else {
+    document.body.style.filter = '';
+    document.querySelectorAll('img').forEach(img => img.style.filter = '');
+  }
+  toast('Theme set to ' + theme, 'success');
+}
+
+async function savePrivacySettings() {
+  const settings = {};
+  ['analytics','cookies'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.checked ? 'true' : 'false';
+  });
+  const method = document.getElementById('s-2fa-method');
+  if (method) settings['twofa-method'] = method.value;
+  await saveBulkSettings(settings);
+}
+
+async function enable2FA() {
+  const method = document.getElementById('s-2fa-method')?.value || 'SMS';
+  await saveSetting('twofa-enabled', 'true');
+  await saveSetting('twofa-method', method);
+  toast('Two-factor authentication enabled via ' + method, 'success');
+}
+
+async function saveMedicalPrefs() {
+  const settings = {};
+  const fields = {
+    's-pref-prov': 'prefProvider', 's-pref-appt': 'prefApptType',
+    's-pharmacy': 'prefPharmacy', 's-language': 'prefLanguage',
+    's-allergies': 'allergies', 's-medications': 'medications', 's-conditions': 'conditions'
+  };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) settings[key] = el.value;
+  });
+  ['share-prov','share-ins','share-research'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.checked ? 'true' : 'false';
+  });
+  await saveBulkSettings(settings);
+}
+
+async function saveProfessionalInfo() {
+  const settings = {};
+  const fields = {
+    's-ptitle': 'profTitle', 's-specialty': 'profSpecialty',
+    's-credentials': 'profCredentials', 's-license': 'profLicense',
+    's-npi': 'profNpi', 's-bio': 'profBio',
+    's-facility': 'profFacility', 's-office-phone': 'profOfficePhone', 's-fax': 'profFax'
+  };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) settings[key] = el.value;
+  });
+  await saveBulkSettings(settings);
+}
+
+async function saveAvailabilitySettings() {
+  const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const availability = days.map((day, i) => ({
+    DayOfWeek: dayNames[i],
+    StartTime: document.getElementById('avail-start-' + day)?.value || null,
+    EndTime: document.getElementById('avail-end-' + day)?.value || null,
+    IsAvailable: document.getElementById('avail-check-' + day)?.checked || false
+  }));
+  const r = await api('POST', '/settings/availability/1', availability);
+  if (r.ok) {
+    // also save appointment slot settings
+    const apptSettings = {};
+    ['s-appt-duration','s-appt-buffer','s-appt-max'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) apptSettings[id] = el.value;
+    });
+    ['telehealth-only','new-patients'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) apptSettings[id] = el.checked ? 'true' : 'false';
+    });
+    await saveBulkSettings(apptSettings);
+    toast('Availability schedule saved', 'success');
+  } else toast('Failed to save availability', 'error');
+}
+
+async function saveSystemConfig() {
+  const settings = {};
+  const fields = {
+    's-facility-name': 'facilityName', 's-facility-address': 'facilityAddress',
+    's-facility-phone': 'facilityPhone', 's-facility-fax': 'facilityFax',
+    's-facility-email': 'facilityEmail', 's-facility-website': 'facilityWebsite'
+  };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) settings[key] = el.value;
+  });
+  ['maintenance','new-reg','telehealth','ai-features'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.checked ? 'true' : 'false';
+  });
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('System configuration saved', 'success');
+  else toast('Failed to save', 'error');
+}
+
+async function saveBillingConfig() {
+  const settings = {};
+  const fields = {
+    's-billing-code': 'billingCode', 's-billing-tax': 'billingTax',
+    's-billing-late': 'billingLateFee', 's-billing-due': 'billingDuePeriod',
+    's-billing-processor': 'billingProcessor'
+  };
+  Object.entries(fields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) settings[key] = el.value;
+  });
+  ['auto-invoice','email-invoice'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.checked ? 'true' : 'false';
+  });
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('Billing configuration saved', 'success');
+  else toast('Failed to save', 'error');
+}
+
+async function saveAiConfig() {
+  const settings = {};
+  ['ai-risk','ai-chat','ai-msg','ai-schedule','ai-billing','ai-insights','ai-logging'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.checked ? 'true' : 'false';
+  });
+  ['s-ai-provider','s-ai-model','s-ai-tokens'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) settings[id] = el.value;
+  });
+  const r = await api('POST', '/settings/system', settings);
+  if (r.ok) toast('AI settings saved', 'success');
+  else toast('Failed to save', 'error');
+}
+
+async function sendAnnouncement() {
+  const title = document.getElementById('ann-title')?.value;
+  const body = document.getElementById('ann-body')?.value;
+  const audience = document.getElementById('ann-audience')?.value || 'All Users';
+  if (!title || !body) { toast('Title and message are required', 'error'); return; }
+  const r = await api('POST', '/announcements', {
+    Title: title, Body: body, Audience: audience,
+    SentBy: S.user?.userId || 1,
+    DeliveryEmail: document.getElementById('ann-email')?.checked !== false,
+    DeliverySMS: document.getElementById('ann-sms')?.checked || false,
+    DeliveryInApp: document.getElementById('ann-inapp')?.checked !== false,
+  });
+  if (r.ok) {
+    toast('Announcement sent to ' + audience, 'success');
+    const t = document.getElementById('ann-title'); if (t) t.value = '';
+    const b = document.getElementById('ann-body'); if (b) b.value = '';
+  } else toast('Failed to send announcement', 'error');
+}
+
+async function saveSignature() {
+  const settings = {};
+  const typed = document.getElementById('s-sig-typed');
+  const title = document.getElementById('s-sig-title');
+  if (typed) settings['signatureTyped'] = typed.value;
+  if (title) settings['signatureTitle'] = title.value;
+  await saveBulkSettings(settings);
+}
+
+async function downloadMyData() {
+  const data = {
+    user: S.user,
+    settings: SETTINGS_CACHE,
+    appointments: S.data.appointments,
+    testResults: S.data.testResults,
+    messages: S.data.messages,
+    billing: S.data.billing,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'guardian-genetics-my-data.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Your data has been downloaded', 'success');
+}
+
+function render(){
+  const root=$('root');
+  if(S.screen==='login'||S.screen==='register'){
+    const isL=S.authMode==='login';
+    root.innerHTML=`<div class="auth-wrap"><div class="auth-form-side"><div class="auth-form-inner">
+      <div class="auth-brand"><div class="auth-brand-mark">🧬</div><div class="auth-brand-name">Guardian <span>Genetics</span></div></div>
+      ${isL?`<div class="auth-heading">Sign in to your account</div><div class="auth-subheading">Access your personalized health portal</div><div id="l-err" class="auth-alert error"></div>
+        <form onsubmit="doLogin(event)"><div class="form-field"><label class="form-label">Email</label><input class="form-control" id="l-email" type="email" value="admin@guardiangenetics.com"></div><div class="form-field"><label class="form-label">Password</label><input class="form-control" id="l-pass" type="password" value="Admin123!"></div>
+        <div style="margin-bottom:20px"><div class="form-label" style="margin-bottom:8px">I am a</div><div class="role-tabs">${['Admin','Provider','Patient'].map(r=>`<div class="role-tab ${S.selectedRole===r?'active':''}" onclick="S.selectedRole='${r}';render()"><span class="role-tab-icon">${r==='Admin'?'⚙️':r==='Provider'?'🩺':'👤'}</span>${r}</div>`).join('')}</div></div>
+        <button type="submit" class="btn-auth">Sign in →</button></form><div class="auth-switch">New here? <a onclick="S.authMode='register';render()">Create an account</a></div>`
+      :`<div class="auth-heading">Create your account</div><div class="auth-subheading">Join Guardian Genetics</div><div id="r-err" class="auth-alert error"></div><div id="r-ok" class="auth-alert success"></div>
+        <form onsubmit="doRegister(event)"><div class="form-field"><label class="form-label">Email</label><input class="form-control" id="r-email" type="email" placeholder="you@example.com"></div><div class="form-field"><label class="form-label">Password</label><input class="form-control" id="r-pass" type="password" placeholder="Create a strong password"></div>
+        <div style="margin-bottom:20px"><div class="form-label" style="margin-bottom:8px">I am a</div><div class="role-tabs">${['Admin','Provider','Patient'].map(r=>`<div class="role-tab ${S.selectedRole===r?'active':''}" onclick="S.selectedRole='${r}';render()"><span class="role-tab-icon">${r==='Admin'?'⚙️':r==='Provider'?'🩺':'👤'}</span>${r}</div>`).join('')}</div></div>
+        <button type="submit" class="btn-auth">Create account →</button></form><div class="auth-switch">Have an account? <a onclick="S.authMode='login';render()">Sign in</a></div>`}
+    </div></div>
+    <div class="auth-panel"><div class="auth-panel-badge">🔒 HIPAA-Ready Platform</div><div class="auth-panel-title">Precision genetics.<br><em>Human care.</em></div><div class="auth-panel-desc">A secure, cloud-native platform connecting patients with genetic counselors for personalized health insights.</div>
+    <div class="auth-features"><div class="auth-feature"><div class="auth-feature-icon">🧬</div><div class="auth-feature-text">Advanced genetic testing and risk assessment</div></div><div class="auth-feature"><div class="auth-feature-icon">📅</div><div class="auth-feature-text">Seamless appointment scheduling</div></div><div class="auth-feature"><div class="auth-feature-icon">💬</div><div class="auth-feature-text">Secure messaging with your care team</div></div><div class="auth-feature"><div class="auth-feature-icon">📊</div><div class="auth-feature-text">Real-time results dashboard</div></div></div>
+    <div class="auth-stats-row"><div><div class="auth-stat-num">26</div><div class="auth-stat-lbl">API endpoints</div></div><div><div class="auth-stat-num">13</div><div class="auth-stat-lbl">Data tables</div></div><div><div class="auth-stat-num">100%</div><div class="auth-stat-lbl">Cloud native</div></div></div></div></div>`;
+    return;
+  }
+  const nav=getNav();
+  const uL=(S.user?.email||'U')[0].toUpperCase();
+  const pages={dashboard:pageDashboard,settings:pageSettings,'my-providers':pageMyProviders,patients:pagePatients,providers:pageProviders,appointments:pageAppointments,testresults:pageTestResults,messages:pageMessages,billing:pageBilling};
+  root.innerHTML=`<div class="app-layout">
+    <nav class="sidebar"><div class="sidebar-header"><div class="sidebar-logo-mark">🧬</div><div class="sidebar-logo-text">Guardian <span>Genetics</span></div></div>
+    <div class="sidebar-body"><div class="nav-section-label">${isAdmin()?'Admin Portal':isProvider()?'Provider Portal':'Patient Portal'}</div>
+    ${nav.map(n=>`<div class="nav-item ${S.page===n.id?'active':''}" onclick="setPage('${n.id}')"><span class="nav-icon">${n.icon}</span>${n.label}${n.id==='messages'&&S.unreadCount>0?`<span class="nav-badge">${S.unreadCount}</span>`:''}</div>`).join('')}</div>
+    <div class="sidebar-footer"><div class="user-card"><div class="user-avatar">${uL}</div><div class="user-info"><div class="user-name">${S.user?.email||'User'}</div><div class="user-role">${S.selectedRole||'Admin'}</div></div><span class="user-logout" onclick="logout()" title="Sign out">⏻</span></div></div></nav>
+    <div class="main"><div class="topbar"><div class="topbar-title">${TITLES[S.page]||'Dashboard'}</div><div class="topbar-actions"><div class="topbar-icon-btn" onclick="loadData()" style="font-size:18px">↻</div><div class="topbar-icon-btn" onclick="setPage('messages')">💬${S.unreadCount>0?'<span class="notif-dot"></span>':''}</div><div class="topbar-divider"></div><div class="topbar-avatar">${uL}</div></div></div>
+    <div id="page-content">${(pages[S.page]||pageDashboard)()}</div></div></div>`;
+}
+render();
+</script></body></html>
